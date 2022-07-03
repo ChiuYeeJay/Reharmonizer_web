@@ -1,0 +1,3 @@
+[submodule "audio_to_midi"]
+	path = audio_to_midi
+	url = https://github.com/tiagoft/audio_to_midi.git
