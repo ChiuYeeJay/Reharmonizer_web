@@ -1,3 +1,7 @@
+## general
+- todo
+  - write a readme
+
 ## harmonizer.ipynb
 - todo
   - test all args
