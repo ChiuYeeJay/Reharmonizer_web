@@ -6,4 +6,4 @@
   - ~~redesign 'make_a_fake_last_chord_for_the_first_chord'~~
 
 - issue
-  - if octave > 5 then output midi's time will be weird
+  - ~~if octave > 5 then output midi's time will be weird~~  self disappear
