@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Reharmonizer</title>
+</head>
+<body>
+
+<h1>Reharmon!zer</h1>
+<div>
+    <p>Reharmonizer使你可以上傳任意音檔，系統將會為他量身打造鋼琴的旋律與和聲</p>
+</div>
+<form target="_self" method="post" action="/upload" enctype="multipart/form-data">
+    <label for="audio_upload">上傳音檔：</label>
+    <!-- <input name="original_audio" id="audio_upload" type="file" accept="audio/*" formenctype="multipart/form-data" required> -->
+    <input name="original_audio" id="audio_upload" type="file" accept="audio/wav" formenctype="multipart/form-data" required>
+    <input type="submit" value="上傳">
+</form>
+
+</body>
+</html> 
