@@ -1,13 +1,9 @@
-import json
-
-from numpy import save
 import audio2midi_modified as audio2midi
 import harmonizer
 import midi_to_sound
 import time
 import os
 import sys
-from crypt import methods
 from flask import Flask, jsonify, redirect, render_template, url_for
 from flask import request
 
