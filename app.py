@@ -1,4 +1,6 @@
 import json
+
+from numpy import save
 import audio2midi_modified as audio2midi
 import harmonizer
 import midi_to_sound
@@ -14,6 +16,11 @@ AUDIO2MIDI_PATH = "audio_to_midi/audio2midi.py"
 LOCAL_TEMPFILE_PATH = "tempfiles/"
 outer_file_name = ''
 temp_path = ''
+
+def save_chord_record(chord_record: list, path: str):
+    chord_file = open(path, 'w')
+    chord_file.write("\n".join(chord_record))
+    chord_file.close()
 
 def generate_temp_path():
     inner_name = str(hash(time.time()))
@@ -45,5 +52,17 @@ def get_uploaded_audio():
 
 @app.post("/audio2midi")
 def go_audio2midi():
-    audio2midi.run(temp_path+'/origin.wav', temp_path+'/origin.mid')
+    audio2midi.run(temp_path+'/origin.wav', temp_path+'/melody.mid')
+    return jsonify({"status":"audio processed!"})
+
+@app.post("/harmonize")
+def go_harmonizing():
+    original_sound_path = temp_path + '/origin.wav'
+    melody_midi_path = temp_path + '/melody.mid'
+    harmony_midi_path = temp_path + '/harmony.mid'
+    if not os.path.exists(melody_midi_path):
+        return url_for("second_page")
+    chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg=request.json)
+    save_chord_record(chord_record, temp_path + '/chord.txt')
+    file_paths = midi_to_sound.midis_to_sound(original_sound_path, melody_midi_path, harmony_midi_path)
     return url_for("second_page")
