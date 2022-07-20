@@ -353,7 +353,7 @@ def melody_segmentation_ad_midiIO(melody_midi_name: str, output_name: str):
                 time_acc += msg.time
     # output_name = generate_output_file_name(melody_midi_name)
     newmid.save(output_name)
-    return output_name, chord_notation_record
+    return chord_notation_record
 
 # %% [markdown]
 # ### set global variables
@@ -396,8 +396,8 @@ def set_global_variables(arg: dict):
 # %%
 def run(input_name, output_name, arg):
     set_global_variables(arg)
-    ouput_name, chord_record = melody_segmentation_ad_midiIO(input_name, output_name)
-    return ouput_name, chord_record
+    chord_record = melody_segmentation_ad_midiIO(input_name, output_name)
+    return chord_record
 
 # %%
 # print(run("mouse_melody.mid", "mouse_harmony.mid", {"octave":4}))
