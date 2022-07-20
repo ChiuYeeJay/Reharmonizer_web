@@ -310,7 +310,7 @@ def add_chord_notes_on_midi_track(newtrack: MidiTrack, chord, on_time, time_acc)
     for note in chord[1:]:
         newtrack.append(Message('note_off', note = note, velocity = OUTPUT_MIDINOTE_VELOCITY, time = 0))
     
-def melody_segmentation_ad_midiIO(melody_midi_name: str):
+def melody_segmentation_ad_midiIO(melody_midi_name: str, output_name: str):
     input_midi = MidiFile(melody_midi_name, clip=True)
     newmid = MidiFile()
     newtrack = MidiTrack()
@@ -351,7 +351,7 @@ def melody_segmentation_ad_midiIO(melody_midi_name: str):
                     note_list.append((msg.note, msg.time))
                 # also add note_on but not excess limit
                 time_acc += msg.time
-    output_name = generate_output_file_name(melody_midi_name)
+    # output_name = generate_output_file_name(melody_midi_name)
     newmid.save(output_name)
     return output_name, chord_notation_record
 
@@ -394,12 +394,12 @@ def set_global_variables(arg: dict):
 # ### run
 
 # %%
-def run(input_name, arg):
+def run(input_name, output_name, arg):
     set_global_variables(arg)
-    ouput_name, chord_record = melody_segmentation_ad_midiIO(input_name)
+    ouput_name, chord_record = melody_segmentation_ad_midiIO(input_name, output_name)
     return ouput_name, chord_record
 
 # %%
-# print(run("mouse.mid", {"octave":4}))
+# print(run("mouse_melody.mid", "mouse_harmony.mid", {"octave":4}))
 
 
