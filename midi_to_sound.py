@@ -26,7 +26,7 @@ def turn_midi_files_into_wavs(file_paths):
     print("render finish!")
 
 # %%
-def combine_sounds(file_paths:dict, would_be_combined:list[bool]):
+def combine_sounds(file_paths:dict, would_be_combined:list[bool] = [True, True, True]):
     assert type(would_be_combined) == list, f"type(would_be_combined)={type(would_be_combined)}"
     assert len(would_be_combined) == 3, f"len(would_be_combined)={len(would_be_combined)} != 3"
     
@@ -48,12 +48,13 @@ def combine_sounds(file_paths:dict, would_be_combined:list[bool]):
     print("combine finish!")
 
 # %%
-def midi_to_sound(original_sound_path:str, melody_midi_path:str, harmony_midi_path:str, would_be_combined:list[bool] = [True, True, True]):
+def midis_to_sound(original_sound_path:str, melody_midi_path:str, harmony_midi_path:str):
     file_paths = process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path)
     turn_midi_files_into_wavs(file_paths)
-    combine_sounds(file_paths ,would_be_combined)
+    return file_paths
 
 # %%
-# midi_to_sound("mouse_origin.wav", "mouse_melody.mid", "mouse_harmony.mid", [True, True, True])
+# midis_to_sound("mouse_origin.wav", "mouse_melody.mid", "mouse_harmony.mid")
+# combine_sounds(file_paths, [True, True, True])
 
 
