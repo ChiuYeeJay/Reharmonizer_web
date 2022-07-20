@@ -1,11 +1,12 @@
+import json
+import audio2midi_modified as audio2midi
 import harmonizer
 import midi_to_sound
 import time
 import os
 import sys
 from crypt import methods
-from flask import Flask
-from flask import render_template
+from flask import Flask, jsonify, redirect, render_template, url_for
 from flask import request
 
 PYTHON = "python3.9"
@@ -26,16 +27,23 @@ app = Flask(__name__)
 
 @app.route("/")
 def entry_page():
-    return render_template('entry.htm')
+    return render_template('entry.htm', entry_js_url=url_for('static', filename='entry.js'))
 
-@app.route("/upload", methods=['POST'])
-def process_upladed_audio():
+@app.route("/second")
+def second_page():
+    return render_template("second.htm")
+
+@app.post("/upload")
+def get_uploaded_audio():
     global outer_file_name
     global temp_path
     outer_file_name = request.files['original_audio'].filename
     temp_path = generate_temp_path()
     os.mkdir(temp_path)
     request.files["original_audio"].save(temp_path+"/origin.wav")
-    os.system(f"{PYTHON} {AUDIO2MIDI_PATH} {temp_path+'/origin.wav'} {temp_path+'/origin.mid'}")
-    os.system(f"echo \'{PYTHON} {AUDIO2MIDI_PATH} {temp_path+'/origin.wav'} {temp_path+'/origin.mid'}\'")
-    return f"<p>Hello, World!</p>"
+    return jsonify({"status":"audio uploaded!"})
+
+@app.post("/audio2midi")
+def go_audio2midi():
+    audio2midi.run(temp_path+'/origin.wav', temp_path+'/origin.mid')
+    return url_for("second_page")
