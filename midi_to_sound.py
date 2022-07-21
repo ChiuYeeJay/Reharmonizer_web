@@ -18,9 +18,9 @@ def process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path)
 FLUIDSYNTH_FLAGS = "-g 1 -q"
 SOUND_FONT_PATH = "src/MuseScore_General.sf3"
 
-def turn_midi_file_into_wav(file_path):
-    print("start render " + file_path + "...")
-    os.system(f"fluidsynth {SOUND_FONT_PATH} {file_path} --fast-render={file_path} {FLUIDSYNTH_FLAGS}")
+def turn_midi_file_into_wav(midi_file_path, wav_file_path):
+    print(f"start render {midi_file_path} to {wav_file_path}...")
+    os.system(f"fluidsynth {SOUND_FONT_PATH} {midi_file_path} --fast-render={wav_file_path} {FLUIDSYNTH_FLAGS}")
     print("render finish!")
 
 # %%
@@ -51,12 +51,12 @@ def combine_sounds(file_paths:dict, would_be_combined:list[bool] = [True, True, 
 # %%
 def midis_to_sound(original_sound_path:str, melody_midi_path:str, harmony_midi_path:str):
     file_paths = process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path)
-    turn_midi_file_into_wav(file_paths["melody_midi"])
-    turn_midi_file_into_wav(file_paths["harmony_midi"])
+    turn_midi_file_into_wav(file_paths["melody_midi"], file_paths["melody_wav"])
+    turn_midi_file_into_wav(file_paths["harmony_midi"], file_paths["harmony_wav"])
     return file_paths
 
 # %%
-# midis_to_sound("mouse_origin.wav", "mouse_melody.mid", "mouse_harmony.mid")
-# combine_sounds(file_paths, [True, True, True])
+# file_paths = midis_to_sound("mouse_origin.wav", "mouse_melody.mid", "mouse_harmony.mid")
+# combine_sounds(file_paths, [True, True, True], "result111.wav")
 
 
