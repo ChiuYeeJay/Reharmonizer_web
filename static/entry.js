@@ -1,22 +1,19 @@
 "use strict";
-var audio_submit_request;
-var audio2midi_request;
-var harmonization_request;
 
 function harmonization_suceed(){
-    if (harmonization_request.readyState != XMLHttpRequest.DONE) return;
-    if (harmonization_request.status === 200) {
+    if (this.readyState != XMLHttpRequest.DONE) return;
+    if (this.status === 200) {
         document.getElementById("upload_status").innerText = "redirect..."
-        window.location.assign(harmonization_request.responseText)
+        window.location.assign(this.responseText)
     }
     else{
-        console.warn("something wrong: " + harmonization_request.status);
+        console.warn("something wrong: " + this.status);
     }
 }
 
 function start_harmonization(){
     let harmonization_args = {"octave":4}
-    harmonization_request = new XMLHttpRequest();
+    let harmonization_request = new XMLHttpRequest();
     harmonization_request.onreadystatechange = harmonization_suceed
     harmonization_request.open("POST", "/harmonize");
     harmonization_request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -24,32 +21,32 @@ function start_harmonization(){
 }
 
 function audio2midi_suceeded(){
-    if (audio2midi_request.readyState != XMLHttpRequest.DONE) return;
-    if (audio2midi_request.status === 200) {
+    if (this.readyState != XMLHttpRequest.DONE) return;
+    if (this.status === 200) {
         document.getElementById("upload_status").innerText = "harmonizing..."
         start_harmonization()
     }
     else{
-        console.warn("something wrong: " + audio2midi_request.status);
+        console.warn("something wrong: " + this.status);
     }
 }
 
 function start_audio2midi(){
-    audio2midi_request = new XMLHttpRequest();
+    let audio2midi_request = new XMLHttpRequest();
     audio2midi_request.onreadystatechange = audio2midi_suceeded
     audio2midi_request.open("POST", "/audio2midi");
     audio2midi_request.send();
 }
 
 function submit_suceeded() {
-    if (audio_submit_request.readyState != XMLHttpRequest.DONE) return;
-    if (audio_submit_request.status === 200) {
-        // console.log(audio_submit_request.responseText);
+    if (this.readyState != XMLHttpRequest.DONE) return;
+    if (this.status === 200) {
+        // console.log(this.responseText);
         document.getElementById("upload_status").innerText = "processing audio..."
         start_audio2midi()
     }
     else{
-        console.warn("something wrong: " + audio_submit_request.status);
+        console.warn("something wrong: " + this.status);
     }
 }
 
@@ -57,7 +54,8 @@ function submit_audio () {
     let form_element = document.getElementById("audio_form")
     form_element.hidden = true;
     document.getElementById("upload_status").innerText = "uploading audio..."
-    audio_submit_request = new XMLHttpRequest();
+    
+    let audio_submit_request = new XMLHttpRequest();
     audio_submit_request.onreadystatechange = submit_suceeded
     audio_submit_request.open("POST", form_element.action);
     audio_submit_request.send(new FormData(form_element));
