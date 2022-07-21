@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Reharmonizer</title>
+<script src="{{second_js_url}}"></script>
 </head>
 <body>
 
@@ -9,18 +10,16 @@
 <p>音檔已經處理完成，你可以預覽、下載這邊的東東，或是選擇重新配和聲</p>
 <div>
     <p>音檔預覽：</p>
-    <form>
-        <input type="checkbox" name="original_audio" checked>
-        <label for="original_audio">原音檔</label>
-        <input type="checkbox" name="melody" checked>
-        <label for="melody">旋律</label>
-        <input type="checkbox" name="harmony" checked>
-        <label for="harmony">和聲</label>
-        <input type="button" id="get_mixed_audio_btn" value="生成">
-    </form>
-    <audio controls>
-        <source src="" type="">
-    </audio>
+    <input type="checkbox" id="original_audio_checkbox" checked>
+    <label for="original_audio">原音檔</label>
+    <input type="checkbox" id="melody_audio_checkbox" checked>
+    <label for="melody">旋律</label>
+    <input type="checkbox" id="harmony_audio_checkbox" checked>
+    <label for="harmony">和聲</label>
+    <input type="button" id="get_mixed_audio_btn" value="生成">
+    <br>
+    <audio id="mixed_audio_ctrlr" controls></audio>
+    <p id="audio_waiting_hint" hidden>waiting audio...</p>
     <button type="button" id="dl_mixed_audio_btn">下載音檔</button>
 </div>
 <div>
