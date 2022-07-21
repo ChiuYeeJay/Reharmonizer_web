@@ -61,4 +61,5 @@ def go_harmonizing():
     chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg=request.json)
     save_chord_record(chord_record, temp_path + '/chord.txt')
     file_paths = midi_to_sound.midis_to_sound(original_sound_path, melody_midi_path, harmony_midi_path)
+    midi_to_sound.combine_sounds(file_paths=file_paths, would_be_combined=[True, True, True])
     return url_for("second_page")
