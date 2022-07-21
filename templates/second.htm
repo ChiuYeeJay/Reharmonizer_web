@@ -6,10 +6,35 @@
 <body>
 
 <h1>Reharmon!zer</h1>
+<p>音檔已經處理完成，你可以預覽、下載這邊的東東，或是選擇重新配和聲</p>
 <div>
-    <p>這是第二頁</p>
+    <p>音檔預覽：</p>
+    <form>
+        <input type="checkbox" name="original_audio" checked>
+        <label for="original_audio">原音檔</label>
+        <input type="checkbox" name="melody" checked>
+        <label for="melody">旋律</label>
+        <input type="checkbox" name="harmony" checked>
+        <label for="harmony">和聲</label>
+        <input type="button" id="get_mixed_audio_btn" value="生成">
+    </form>
+    <audio controls>
+        <source src="" type="">
+    </audio>
+    <button type="button" id="dl_mixed_audio_btn">下載音檔</button>
 </div>
-
+<div>
+    <button type="button" id="melody_midi_dlbtn">下載旋律midi</button>
+    <button type="button" id="harmony_midi_dlbtn">下載和聲midi</button>
+</div>
+<div>
+    <p>和弦表</p>
+    <div id="chord_list" style="height: 200px;width: 100px;overflow-y: scroll;"></div>
+</div>
+<div>
+    <button type="button" id="back_last_page_btn">回到上一頁</button>
+    <button type="button" id="regenerate_harmony">重新生成和聲</button>
+</div>
 
 
 </body>
