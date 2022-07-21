@@ -38,7 +38,7 @@ function start_audio2midi(){
     audio2midi_request.send();
 }
 
-function submit_suceeded() {
+function submit_suceeded(){
     if (this.readyState != XMLHttpRequest.DONE) return;
     if (this.status === 200) {
         // console.log(this.responseText);
@@ -50,7 +50,7 @@ function submit_suceeded() {
     }
 }
 
-function submit_audio () {
+function submit_audio(){
     let form_element = document.getElementById("audio_form")
     form_element.hidden = true;
     document.getElementById("upload_status").innerText = "uploading audio..."
