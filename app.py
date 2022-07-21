@@ -103,4 +103,4 @@ def go_mixing_audio():
         midi_to_sound.turn_midi_file_into_wav(temp_path + '/harmony.wav')
     if generating_audio_mix_is_needed(result_path, harmony_included):
         midi_to_sound.combine_sounds(midi_to_sound_file_paths, would_be_combined, result_path)
-    return send_file(result_path, mimetype="audio/wav")
+    return send_file(result_path, mimetype="audio/wav", download_name="mixed_audio.wav")

@@ -23,10 +23,12 @@ function go_back_entry(){
 }
 
 function mix_audio_response_handler(xhttp_request){
+    console.log(xhttp_request.response)
     let blob_url = URL.createObjectURL(xhttp_request.response)
     document.getElementById("audio_waiting_hint").hidden = true;
     document.getElementById("mixed_audio_ctrlr").src = blob_url;
     document.getElementById("mixed_audio_ctrlr").hidden = false;
+    document.getElementById("dl_mixed_audio_link").href = blob_url;
 }
 
 function get_mixed_audio_btn_clicked(){
