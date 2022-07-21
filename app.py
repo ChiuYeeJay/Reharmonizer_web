@@ -5,7 +5,7 @@ import midi_to_sound
 import time
 import os
 import sys
-from flask import Flask, jsonify, redirect, render_template, send_file, url_for
+from flask import Flask, abort, jsonify, redirect, render_template, send_file, url_for
 from flask import request
 
 PYTHON = "python3.9"
@@ -104,3 +104,36 @@ def go_mixing_audio():
     if generating_audio_mix_is_needed(result_path, harmony_included):
         midi_to_sound.combine_sounds(midi_to_sound_file_paths, would_be_combined, result_path)
     return send_file(result_path, mimetype="audio/wav", download_name="mixed_audio.wav")
+
+@app.post("/second/get_midi_file")
+def get_midi_file_blob():
+    which_midi = request.get_data(as_text=True)
+    midi_path = ""
+    if which_midi == "melody":
+        midi_path = temp_path + '/melody.mid'
+    elif which_midi == "harmony":
+        midi_path = temp_path + '/harmony.mid'
+    else:
+        abort(400)
+    return send_file(midi_path, "audio/midi")
+
+@app.post("/second/get_chords")
+def get_chords():
+    chord_path = temp_path + "/chord.txt"
+    chord_file = open(chord_path, "r")
+    chord_txt = chord_file.read()
+    chord_file.close()
+    return chord_txt
+
+@app.post("/second/hamonize_again")
+def hamonize_again():
+    melody_midi_path = temp_path + '/melody.mid'
+    harmony_midi_path = temp_path + '/harmony.mid'
+    harmony_wav_path = temp_path + '/harmony.wav'
+    if not os.path.exists(melody_midi_path):
+        abort(400)
+    chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg={})
+    save_chord_record(chord_record, temp_path + '/chord.txt')
+    
+    midi_to_sound.turn_midi_file_into_wav(harmony_midi_path, harmony_wav_path)
+    return ""

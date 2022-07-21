@@ -25,14 +25,21 @@
     </a>
 </div>
 <div>
-    <button type="button" id="melody_midi_dlbtn">下載旋律midi</button>
-    <button type="button" id="harmony_midi_dlbtn">下載和聲midi</button>
+    <a id="melody_midi_dl_link" download="melody.mid">
+        <button type="button" id="melody_midi_dlbtn">下載旋律midi</button>
+    </a>
+    <a id="harmony_midi_dl_link" download="harmony.mid">
+        <button type="button" id="harmony_midi_dlbtn">下載和聲midi</button>
+    </a>
 </div>
 <div>
     <p>和弦表</p>
-    <div id="chord_list" style="height: 200px;width: 100px;overflow-y: scroll;"></div>
+    <div id="chord_list_div" style="height: 200px;width: 200px;overflow-y: scroll;">
+        <p id="chord_list"></p>
+    </div>
 </div>
 <div>
+    <p id="regenerate_hint" hidden>重新生成中...</p>
     <button type="button" id="back_last_page_btn">回到上一頁</button>
     <button type="button" id="regenerate_harmony">重新生成和聲</button>
 </div>
