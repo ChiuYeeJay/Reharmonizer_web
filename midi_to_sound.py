@@ -26,7 +26,7 @@ def turn_midi_files_into_wavs(file_paths):
     print("render finish!")
 
 # %%
-def combine_sounds(file_paths:dict, would_be_combined:list[bool] = [True, True, True]):
+def combine_sounds(file_paths:dict, would_be_combined:list[bool] = [True, True, True], output_path = ""):
     assert type(would_be_combined) == list, f"type(would_be_combined)={type(would_be_combined)}"
     assert len(would_be_combined) == 3, f"len(would_be_combined)={len(would_be_combined)} != 3"
     
@@ -44,7 +44,10 @@ def combine_sounds(file_paths:dict, would_be_combined:list[bool] = [True, True, 
         if not would_be_combined[i]: continue
         combined_sound = combined_sound.overlay(sound)
     combined_sound = pydub.effects.normalize(combined_sound, headroom=1)
-    combined_sound.export(file_paths["result"], format="wav", bitrate="312k")
+
+    if output_path == "":
+        output_path = file_paths["result"]
+    combined_sound.export(output_path, format="wav", bitrate="312k")
     print("combine finish!")
 
 # %%
