@@ -127,12 +127,14 @@ def get_chords():
 
 @app.post("/second/hamonize_again")
 def hamonize_again():
+    harmonization_args = request.get_json()
+    print(harmonization_args)
     melody_midi_path = temp_path + '/melody.mid'
     harmony_midi_path = temp_path + '/harmony.mid'
     harmony_wav_path = temp_path + '/harmony.wav'
     if not os.path.exists(melody_midi_path):
         abort(400)
-    chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg={})
+    chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg=harmonization_args)
     save_chord_record(chord_record, temp_path + '/chord.txt')
     
     midi_to_sound.turn_midi_file_into_wav(harmony_midi_path, harmony_wav_path)

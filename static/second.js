@@ -7,6 +7,7 @@ function start(){
     get_mixed_audio_btn_clicked();
     request_midi_dowload_link();
     request_chords();
+    refresh_arg_value_display();
 }
 
 function post_sender(action, data, handler, content_type="application/json", response_type=""){
@@ -75,12 +76,13 @@ function request_chords(){
 
 function request_harmonizing_again(){
     document.getElementById("regenerate_hint").hidden = false;
-    post_sender("/second/hamonize_again", JSON.stringify({"octave":4}), function(xhttp_request){
+    let harmonization_args = collect_args();
+    post_sender("/second/hamonize_again", harmonization_args, function(xhttp_request){
         get_mixed_audio_btn_clicked();
         request_midi_dowload_link();
         request_chords();
         document.getElementById("regenerate_hint").hidden = true;
-    }, "text/plain", "text")
+    }, "application/json", "text")
 }
 
 function display_value_of_range(id, suffix=""){
@@ -89,7 +91,8 @@ function display_value_of_range(id, suffix=""){
     val_label.innerText = nd.value + suffix;
 }
 
-function refresh_arg_value_display(form_node){
+function refresh_arg_value_display(){
+    let form_node = document.getElementById("harmonization_arg_inputs_form");
     let inputs_list = form_node.getElementsByTagName("input");
     for(let i=0;i<inputs_list.length;i++){
         let input_element = inputs_list[i]
@@ -113,4 +116,42 @@ function show_hide_arg_form(){
     }
 }
 
+function collect_args(){
+    let arg_octave = parseInt(document.getElementById("arg_octave").value);
+    let arg_chord_trend_maj = parseFloat(document.getElementById("arg_chord_trend_maj").value);
+    let arg_chord_trend_min = parseFloat(document.getElementById("arg_chord_trend_min").value);
+    let arg_chord_trend_dom = parseFloat(document.getElementById("arg_chord_trend_dom").value);
+    let arg_chord_trend_domsus4 = parseFloat(document.getElementById("arg_chord_trend_domsus4").value);
+    let arg_chord_trend_dim = parseFloat(document.getElementById("arg_chord_trend_dim").value);
+    let arg_chord_trend_hdim = parseFloat(document.getElementById("arg_chord_trend_hdim").value);
+    let arg_chord_trend_mM = parseFloat(document.getElementById("arg_chord_trend_mM").value);
+    let arg_chord_trend_aug_7 = parseFloat(document.getElementById("arg_chord_trend_aug+7").value);
+    let arg_chord_trend_aug7 = parseFloat(document.getElementById("arg_chord_trend_aug7").value);
+    let arg_selection_range = parseInt(document.getElementById("arg_selection_range").value);
+    let arg_antidirection = parseFloat(document.getElementById("arg_antidirection").value);
+    let arg_fifth_circle = parseInt(document.getElementById("arg_fifth_circle").value);
+    let arg_voicing_openclose = parseInt(document.getElementById("arg_voicing_openclose").value);
+    let arg_split_time = parseFloat(document.getElementById("arg_split_time").value);
+    let arg_sustain_time = parseFloat(document.getElementById("arg_sustain_time").value);
+    let arg_midi_velocity = parseInt(document.getElementById("arg_midi_velocity").value);
+
+    let fifth_award_table = [0, 15, 150, 1500, 15000];
+    let args = {
+        "octave": arg_octave,
+        "chord_type_trend_args": {"maj":arg_chord_trend_maj, "min":arg_chord_trend_min, "dom":arg_chord_trend_dom, 
+            "domsus":arg_chord_trend_domsus4, "dim":arg_chord_trend_dim, "hdim":arg_chord_trend_hdim,
+            "mM":arg_chord_trend_mM, "aug+7":arg_chord_trend_aug_7, "aug7":arg_chord_trend_aug7},
+        "chord_type_selection_range": arg_selection_range,
+        "antidirection_award": 1-(arg_antidirection/10),
+        "fifth_circle_award": fifth_award_table[arg_fifth_circle],
+        "voicing_openclose_stability": arg_voicing_openclose * 25,
+        "split_time": parseInt(arg_split_time * 1000),
+        "arg_sustain_time": parseInt(arg_sustain_time * 1000),
+        "output_midinote_velocity": arg_midi_velocity
+    };
+    // console.log(args);
+    return JSON.stringify(args);
+}
+
 window.onload = start
+
