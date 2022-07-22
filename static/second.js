@@ -1,5 +1,14 @@
 "use strict";
 
+function start(){
+    document.getElementById("get_mixed_audio_btn").addEventListener("click", get_mixed_audio_btn_clicked);
+    document.getElementById("back_last_page_btn").addEventListener("click", go_back_entry);
+    document.getElementById("regenerate_harmony").addEventListener("click", request_harmonizing_again);
+    get_mixed_audio_btn_clicked();
+    request_midi_dowload_link();
+    request_chords();
+}
+
 function post_sender(action, data, handler, content_type="application/json", response_type=""){
     let xhttp_request = new XMLHttpRequest();
     xhttp_request.onreadystatechange = ()=>{
@@ -74,13 +83,19 @@ function request_harmonizing_again(){
     }, "text/plain", "text")
 }
 
-function start(){
-    document.getElementById("get_mixed_audio_btn").addEventListener("click", get_mixed_audio_btn_clicked);
-    document.getElementById("back_last_page_btn").addEventListener("click", go_back_entry);
-    document.getElementById("regenerate_harmony").addEventListener("click", request_harmonizing_again);
-    get_mixed_audio_btn_clicked();
-    request_midi_dowload_link();
-    request_chords();
+function display_value_of_range(id, suffix=""){
+    let nd = document.getElementById(id);
+    let val_label = document.getElementById(id+"_val");
+    val_label.innerText = nd.value + suffix;
+}
+
+function refresh_arg_value_display(form_node){
+    let inputs_list = form_node.getElementsByClassName("harmonization_arg_input");
+    for(let i=0;i<inputs_list.length;i++){
+        setTimeout(()=>{
+            inputs_list[i].oninput();
+        }, 100)
+    }
 }
 
 window.onload = start
