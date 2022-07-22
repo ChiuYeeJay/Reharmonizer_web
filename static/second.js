@@ -90,11 +90,13 @@ function display_value_of_range(id, suffix=""){
 }
 
 function refresh_arg_value_display(form_node){
-    let inputs_list = form_node.getElementsByClassName("harmonization_arg_input");
+    let inputs_list = form_node.getElementsByTagName("input");
     for(let i=0;i<inputs_list.length;i++){
+        let input_element = inputs_list[i]
+        if(input_element.type != "range") continue;
         setTimeout(()=>{
-            inputs_list[i].oninput();
-        }, 100)
+            input_element.oninput();
+        }, 100);
     }
 }
 
