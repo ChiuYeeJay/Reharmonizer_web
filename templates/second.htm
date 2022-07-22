@@ -39,8 +39,11 @@
     </div>
 </div>
 <div>
-    <button type="button" id="harmonization_arg_inputs_switch">顯示調整參數</button>
-    <form id="harmonization_arg_inputs_form" onreset="refresh_arg_value_display(this)">
+    <button type="button" id="harmonization_arg_inputs_switch" onclick="show_hide_arg_form();">顯示調整參數</button>
+    <button type="button" id="regenerate_harmony">重新生成和聲</button>
+    <p id="regenerate_hint" hidden>重新生成中...</p>
+
+    <form id="harmonization_arg_inputs_form" onreset="refresh_arg_value_display(this)" hidden>
         <label for="arg_octave">八度：</label>
         <input type="range" class="harmonization_arg_input" id="arg_octave" name="arg_octave"
                 oninput="display_value_of_range('arg_octave')" min="1" max="7" step="1" value="4">
@@ -129,8 +132,6 @@
         <label for="arg_midi_velocity" id="arg_midi_velocity_val">100</label>
         <input type="reset">
     </form>
-    <p id="regenerate_hint" hidden>重新生成中...</p>
-    <button type="button" id="regenerate_harmony">重新生成和聲</button>
 </div>
 <div>
     <button type="button" id="back_last_page_btn">回到上一頁</button>

@@ -98,4 +98,17 @@ function refresh_arg_value_display(form_node){
     }
 }
 
+function show_hide_arg_form(){
+    let switch_btn = document.getElementById("harmonization_arg_inputs_switch"); 
+    let form_node = document.getElementById("harmonization_arg_inputs_form");
+    if(form_node.hidden){
+        form_node.hidden = false;
+        switch_btn.innerText = "隱藏調整參數";
+    }
+    else{
+        form_node.hidden = true;
+        switch_btn.innerText = "顯示調整參數";
+    }
+}
+
 window.onload = start
