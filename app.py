@@ -23,6 +23,8 @@ def save_chord_record(chord_record: list, path: str):
 def generate_temp_path():
     inner_name = str(hash(time.time()))
     counts = 1
+    if not os.path.exists(LOCAL_TEMPFILE_PATH):
+        os.mkdir(LOCAL_TEMPFILE_PATH)
     while os.path.exists(LOCAL_TEMPFILE_PATH + inner_name):
         inner_name = inner_name.removesuffix(f"_{counts-1}") + f"_{counts}"
         counts += 1
