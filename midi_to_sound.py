@@ -2,6 +2,7 @@
 import os
 import pydub
 import pydub.effects
+import sf2_loader as sf
 
 # %%
 def process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path):
@@ -15,12 +16,15 @@ def process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path)
     
 
 # %%
-FLUIDSYNTH_FLAGS = "-g 1 -q"
 SOUND_FONT_PATH = "src/MuseScore_General.sf3"
+sf_loader = sf.sf2_loader(SOUND_FONT_PATH)
 
 def turn_midi_file_into_wav(midi_file_path, wav_file_path):
     print(f"start render {midi_file_path} to {wav_file_path}...")
-    os.system(f"fluidsynth {SOUND_FONT_PATH} {midi_file_path} --fast-render={wav_file_path} {FLUIDSYNTH_FLAGS}")
+    sound :pydub.AudioSegment
+    sound = sf_loader.export_midi_file(midi_file_path, format="wav", get_audio=True)
+    sound = pydub.effects.normalize(sound, 10)
+    sound.export(out_f=wav_file_path, format="wav", bitrate="320k")
     print("render finish!")
 
 # %%
