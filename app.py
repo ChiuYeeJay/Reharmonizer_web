@@ -7,6 +7,7 @@ import os
 import sys
 from flask import Flask, abort, jsonify, redirect, render_template, send_file, url_for
 from flask import request
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 PYTHON = "python3.9"
 AUDIO2MIDI_PATH = "audio_to_midi/audio2midi.py"
@@ -31,6 +32,9 @@ def generate_temp_path():
     return LOCAL_TEMPFILE_PATH + inner_name
     
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(
+    app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
+)
 
 @app.route("/")
 def entry_page():
