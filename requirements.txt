@@ -4,4 +4,3 @@ numpy
 librosa
 midiutil
 mido
-sf2_loader

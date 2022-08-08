@@ -2,7 +2,7 @@
 import os
 import pydub
 import pydub.effects
-import sf2_loader as sf
+import piano_synth
 
 # %%
 def process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path):
@@ -16,15 +16,11 @@ def process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path)
     
 
 # %%
-SOUND_FONT_PATH = "src/MuseScore_General.sf3"
-sf_loader = sf.sf2_loader(SOUND_FONT_PATH)
+PIANO_SOUND_PATH = "piano_sound/"
 
 def turn_midi_file_into_wav(midi_file_path, wav_file_path):
     print(f"start render {midi_file_path} to {wav_file_path}...")
-    sound :pydub.AudioSegment
-    sound = sf_loader.export_midi_file(midi_file_path, format="wav", get_audio=True)
-    sound = pydub.effects.normalize(sound, 10)
-    sound.export(out_f=wav_file_path, format="wav", bitrate="320k")
+    piano_synth.midi_file_to_wav(midi_file_path, wav_file_path, PIANO_SOUND_PATH)
     print("render finish!")
 
 # %%
