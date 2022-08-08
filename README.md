@@ -10,4 +10,6 @@ Reharmonizer_web is a web app that allows people upload random audio, and genera
   - librosa
   - midiutil
   - mido
-- [Fluidsynth](https://www.fluidsynth.org/)
+
+## Piano Sound
+The piano sound is extracted and modified from [YDP-GrandPiano](https://freepats.zenvoid.org/Piano/acoustic-grand-piano.html) soundfont.
