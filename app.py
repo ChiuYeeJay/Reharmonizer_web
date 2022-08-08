@@ -1,10 +1,8 @@
-import json
 import audio2midi_modified as audio2midi
 import harmonizer
 import midi_to_sound
 import time
 import os
-import sys
 from flask import Flask, abort, jsonify, redirect, render_template, send_file, url_for
 from flask import request
 from werkzeug.middleware.proxy_fix import ProxyFix
