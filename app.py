@@ -51,11 +51,18 @@ def get_uploaded_audio():
     outer_file_name = request.files['original_audio'].filename
     temp_path = generate_temp_path()
     os.mkdir(temp_path)
+
+    print(f"id:{temp_path} upload")
+    assert os.path.exists(temp_path), f"temp_path({temp_path}) doesn't exist!"
+
     request.files["original_audio"].save(temp_path+"/origin.wav")
     return jsonify({"status":"audio uploaded!"})
 
 @app.post("/audio2midi")
 def go_audio2midi():
+    print(f"id:{temp_path} audio2midi")
+    assert os.path.exists(temp_path), f"temp_path({temp_path}) doesn't exist!"
+    
     audio2midi.run(temp_path+'/origin.wav', temp_path+'/melody.mid')
     return jsonify({"status":"audio processed!"})
 
