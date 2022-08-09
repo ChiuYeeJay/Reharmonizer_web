@@ -10,16 +10,13 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 PYTHON = "python3.9"
 AUDIO2MIDI_PATH = "audio_to_midi/audio2midi.py"
 LOCAL_TEMPFILE_PATH = "tempfiles/"
-outer_file_name = ''
-temp_path = ''
-midi_to_sound_file_paths = None
 
 def save_chord_record(chord_record: list, path: str):
     chord_file = open(path, 'w')
     chord_file.write("\n".join(chord_record))
     chord_file.close()
 
-def generate_temp_path():
+def generate_audio_id():
     inner_name = str(hash(time.time()))
     counts = 1
     if not os.path.exists(LOCAL_TEMPFILE_PATH):
@@ -27,7 +24,7 @@ def generate_temp_path():
     while os.path.exists(LOCAL_TEMPFILE_PATH + inner_name):
         inner_name = inner_name.removesuffix(f"_{counts-1}") + f"_{counts}"
         counts += 1
-    return LOCAL_TEMPFILE_PATH + inner_name
+    return inner_name
     
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(
@@ -40,47 +37,48 @@ def entry_page():
 
 @app.route("/second")
 def second_page():
-    if temp_path == '':
-        return redirect(url_for("entry_page"))
     return render_template("second.htm", second_js_url=url_for('static', filename='second.js'))
 
 @app.post("/upload")
 def get_uploaded_audio():
-    global outer_file_name
-    global temp_path
-    outer_file_name = request.files['original_audio'].filename
-    temp_path = generate_temp_path()
-    os.mkdir(temp_path)
+    audio_id = generate_audio_id()
+    workspace_path = LOCAL_TEMPFILE_PATH + audio_id
+    os.mkdir(workspace_path)
 
-    print(f"id:{temp_path} upload")
-    assert os.path.exists(temp_path), f"temp_path({temp_path}) doesn't exist!"
+    print(f"id:{audio_id} upload")
+    assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
 
-    request.files["original_audio"].save(temp_path+"/origin.wav")
-    return jsonify({"status":"audio uploaded!"})
+    request.files["original_audio"].save(workspace_path+"/origin.wav")
+    return jsonify({"audio_id":audio_id})
 
 @app.post("/audio2midi")
 def go_audio2midi():
-    print(f"id:{temp_path} audio2midi")
-    assert os.path.exists(temp_path), f"temp_path({temp_path}) doesn't exist!"
-    
-    audio2midi.run(temp_path+'/origin.wav', temp_path+'/melody.mid')
+    audio_id = request.json.get("audio_id")
+    workspace_path = LOCAL_TEMPFILE_PATH + audio_id
+    print(f"id:'{workspace_path}' audio2midi")
+    assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
+
+    audio2midi.run(workspace_path+'/origin.wav', workspace_path+'/melody.mid')
     return jsonify({"status":"audio processed!"})
 
 @app.post("/harmonize")
 def go_harmonizing():
-    original_sound_path = temp_path + '/origin.wav'
-    melody_midi_path = temp_path + '/melody.mid'
-    harmony_midi_path = temp_path + '/harmony.mid'
-    result111_path = temp_path + '/result111.wav'
+    args = request.json.get("args")
+    audio_id = request.json.get("audio_id")
+    workspace_path = LOCAL_TEMPFILE_PATH + audio_id
+
+    original_sound_path = workspace_path + '/origin.wav'
+    melody_midi_path = workspace_path + '/melody.mid'
+    harmony_midi_path = workspace_path + '/harmony.mid'
+    result111_path = workspace_path + '/result111.wav'
     if not os.path.exists(melody_midi_path):
         return url_for("second_page")
-    chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg=request.json)
-    save_chord_record(chord_record, temp_path + '/chord.txt')
+    chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg=args)
+    save_chord_record(chord_record, workspace_path + '/chord.txt')
     
-    global midi_to_sound_file_paths
     midi_to_sound_file_paths = midi_to_sound.midis_to_sound(original_sound_path, melody_midi_path, harmony_midi_path)
     midi_to_sound.combine_sounds(midi_to_sound_file_paths, [True, True, True], result111_path)
-    return url_for("second_page")
+    return url_for("second_page", audio_id=audio_id)
 
 def generate_mix_audio_name(would_be_combined):
     name = "result"
@@ -91,46 +89,64 @@ def generate_mix_audio_name(would_be_combined):
             name = name + "0"
     return name + ".wav"
 
-def generating_harmony_wav_is_needed(harmony_included):
+def generating_harmony_wav_is_needed(harmony_included, workspace_path):
     if not harmony_included:
         return False
     else:
-        return os.path.getmtime(temp_path + '/harmony.wav') < os.path.getmtime(temp_path + '/harmony.mid')
+        return os.path.getmtime(workspace_path + '/harmony.wav') < os.path.getmtime(workspace_path + '/harmony.mid')
 
-def generating_audio_mix_is_needed(result_path, harmony_included):
+def generating_audio_mix_is_needed(result_path, harmony_included, workspace_path):
     if not os.path.exists(result_path):
         return True
     elif not harmony_included:
         return False
     else:
-        return os.path.getmtime(result_path) < os.path.getmtime(temp_path + '/harmony.wav')
+        return os.path.getmtime(result_path) < os.path.getmtime(workspace_path + '/harmony.wav')
+
+@app.post("/second/validate_audio_id")
+def validate_audio_id():
+    audio_id = request.json.get("audio_id")
+    print(f"valid: {os.path.exists(LOCAL_TEMPFILE_PATH + audio_id)}")
+    return jsonify({"is_valid":os.path.exists(LOCAL_TEMPFILE_PATH + audio_id)})
 
 @app.post("/second/mix_audio")
 def go_mixing_audio():
+    audio_id = request.json.get("audio_id")
     would_be_combined = request.json.get("would_be_combined")
-    result_path = temp_path + "/" + generate_mix_audio_name(would_be_combined)
+    workspace_path = LOCAL_TEMPFILE_PATH + audio_id
+
+    original_sound_path = workspace_path + '/origin.wav'
+    melody_midi_path = workspace_path + '/melody.mid'
+    harmony_midi_path = workspace_path + '/harmony.mid'
+
+    result_path = workspace_path + "/" + generate_mix_audio_name(would_be_combined)
     harmony_included = would_be_combined[2]
-    if generating_harmony_wav_is_needed(harmony_included):
-        midi_to_sound.turn_midi_file_into_wav(temp_path + '/harmony.wav')
-    if generating_audio_mix_is_needed(result_path, harmony_included):
-        midi_to_sound.combine_sounds(midi_to_sound_file_paths, would_be_combined, result_path)
+    if generating_harmony_wav_is_needed(harmony_included, workspace_path):
+        midi_to_sound.turn_midi_file_into_wav(workspace_path + '/harmony.wav')
+    if generating_audio_mix_is_needed(result_path, harmony_included, workspace_path):
+        midi2sound_file_paths = midi_to_sound.process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path)
+        midi_to_sound.combine_sounds(midi2sound_file_paths, would_be_combined, result_path)
     return send_file(result_path, mimetype="audio/wav", download_name="mixed_audio.wav")
 
 @app.post("/second/get_midi_file")
 def get_midi_file_blob():
-    which_midi = request.get_data(as_text=True)
+    which_midi = request.json.get("which_midi")
+    audio_id = request.json.get("audio_id")
+    workspace_path = LOCAL_TEMPFILE_PATH + audio_id
     midi_path = ""
     if which_midi == "melody":
-        midi_path = temp_path + '/melody.mid'
+        midi_path = workspace_path + '/melody.mid'
     elif which_midi == "harmony":
-        midi_path = temp_path + '/harmony.mid'
+        midi_path = workspace_path + '/harmony.mid'
     else:
         abort(400)
     return send_file(midi_path, "audio/midi")
 
 @app.post("/second/get_chords")
 def get_chords():
-    chord_path = temp_path + "/chord.txt"
+    audio_id = request.json.get("audio_id")
+    workspace_path = LOCAL_TEMPFILE_PATH + audio_id
+    chord_path = workspace_path + "/chord.txt"
     chord_file = open(chord_path, "r")
     chord_txt = chord_file.read()
     chord_file.close()
@@ -138,15 +154,17 @@ def get_chords():
 
 @app.post("/second/hamonize_again")
 def hamonize_again():
-    harmonization_args = request.get_json()
+    harmonization_args = request.json.get("args")
+    audio_id = request.json.get("audio_id")
+    workspace_path = LOCAL_TEMPFILE_PATH + audio_id
     print(harmonization_args)
-    melody_midi_path = temp_path + '/melody.mid'
-    harmony_midi_path = temp_path + '/harmony.mid'
-    harmony_wav_path = temp_path + '/harmony.wav'
+    melody_midi_path = workspace_path + '/melody.mid'
+    harmony_midi_path = workspace_path + '/harmony.mid'
+    harmony_wav_path = workspace_path + '/harmony.wav'
     if not os.path.exists(melody_midi_path):
         abort(400)
     chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg=harmonization_args)
-    save_chord_record(chord_record, temp_path + '/chord.txt')
+    save_chord_record(chord_record, workspace_path + '/chord.txt')
     
     midi_to_sound.turn_midi_file_into_wav(harmony_midi_path, harmony_wav_path)
     return ""

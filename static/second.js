@@ -1,6 +1,25 @@
 "use strict";
+var audio_id = ""
 
-function start(){
+function get_and_validate_audio_id(){
+    let url_param = new URLSearchParams(window.location.search);
+    if(url_param.has("audio_id")){
+        audio_id = url_param.get("audio_id");
+        console.log("audio_id: " + audio_id)
+        post_sender("/second/validate_audio_id", JSON.stringify({"audio_id":audio_id}), start, 
+                    "application/json", "json");
+    }
+    else{
+        go_back_entry();
+    }
+}
+
+// after audio_id being validated, initialze buttons callback and send first requests
+// called by handler of 'get_and_validate_audio_id'
+function start(xhttp_request){
+    if(!xhttp_request.response.is_valid){
+        go_back_entry();
+    }
     document.getElementById("get_mixed_audio_btn").addEventListener("click", get_mixed_audio_btn_clicked);
     document.getElementById("back_last_page_btn").addEventListener("click", go_back_entry);
     document.getElementById("regenerate_harmony").addEventListener("click", request_harmonizing_again);
@@ -51,33 +70,36 @@ function get_mixed_audio_btn_clicked(){
         alert("check at least one!");
     }
     else{
-        let data = JSON.stringify({"would_be_combined":checked_list})
+        let data = JSON.stringify({"would_be_combined":checked_list, "audio_id":audio_id});
         post_sender("/second/mix_audio", data, mix_audio_response_handler, "application/json", "blob");
     }
 }
 
 function request_midi_dowload_link(){
-    post_sender("/second/get_midi_file", "melody", function(xhttp_request){
+    let melody_data = JSON.stringify({"which_midi":"melody", "audio_id":audio_id})
+    post_sender("/second/get_midi_file", melody_data, function(xhttp_request){
         let blob_url = URL.createObjectURL(xhttp_request.response)
         document.getElementById("melody_midi_dl_link").href = blob_url;
-    }, "text/plain", "blob");
+    }, "application/json", "blob");
 
-    post_sender("/second/get_midi_file", "harmony", function(xhttp_request){
+    let harmony_data = JSON.stringify({"which_midi":"harmony", "audio_id":audio_id})
+    post_sender("/second/get_midi_file", harmony_data, function(xhttp_request){
         let blob_url = URL.createObjectURL(xhttp_request.response)
         document.getElementById("harmony_midi_dl_link").href = blob_url;
-    }, "text/plain", "blob");
+    }, "application/json", "blob");
 }
 
 function request_chords(){
-    post_sender("/second/get_chords", "", function(xhttp_request){
+    post_sender("/second/get_chords", JSON.stringify({"audio_id":audio_id}), function(xhttp_request){
         document.getElementById("chord_list").innerText = xhttp_request.response;
-    }, "text/plain", "text");
+    }, "application/json", "text");
 }
 
 function request_harmonizing_again(){
     document.getElementById("regenerate_hint").hidden = false;
     let harmonization_args = collect_args();
-    post_sender("/second/hamonize_again", harmonization_args, function(xhttp_request){
+    let sent_data = JSON.stringify({"audio_id":audio_id, "args":harmonization_args})
+    post_sender("/second/hamonize_again", sent_data, function(xhttp_request){
         get_mixed_audio_btn_clicked();
         request_midi_dowload_link();
         request_chords();
@@ -150,8 +172,8 @@ function collect_args(){
         "output_midinote_velocity": arg_midi_velocity
     };
     // console.log(args);
-    return JSON.stringify(args);
+    return args;
 }
 
-window.onload = start
+window.onload = get_and_validate_audio_id
 
