@@ -70,7 +70,7 @@ def go_harmonizing():
     original_sound_path = workspace_path + '/origin.wav'
     melody_midi_path = workspace_path + '/melody.mid'
     harmony_midi_path = workspace_path + '/harmony.mid'
-    result111_path = workspace_path + '/result111.wav'
+    result111_path = workspace_path + '/result111.mp3'
     if not os.path.exists(melody_midi_path):
         return url_for("second_page")
     chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg=args)
@@ -87,7 +87,7 @@ def generate_mix_audio_name(would_be_combined):
             name = name + "1"
         else:
             name = name + "0"
-    return name + ".wav"
+    return name + ".mp3"
 
 def generating_harmony_wav_is_needed(harmony_included, workspace_path):
     if not harmony_included:

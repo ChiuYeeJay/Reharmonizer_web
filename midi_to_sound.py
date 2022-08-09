@@ -45,7 +45,7 @@ def combine_sounds(file_paths:dict, would_be_combined:list[bool] = [True, True, 
 
     if output_path == "":
         output_path = file_paths["result"]
-    combined_sound.export(output_path, format="wav", bitrate="312k")
+    combined_sound.export(output_path, format="mp3", bitrate="312k")
     print("combine finish!")
 
 # %%
