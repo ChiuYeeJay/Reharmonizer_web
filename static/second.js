@@ -1,4 +1,5 @@
 "use strict";
+
 var audio_id = ""
 
 function get_and_validate_audio_id(){
@@ -35,6 +36,7 @@ function post_sender(action, data, handler, content_type="application/json", res
         if (xhttp_request.readyState != XMLHttpRequest.DONE) return;
         if (xhttp_request.status !== 200) {
             console.warn("something wrong in " + action + ": " + xhttp_request.status);
+            window.alert("something wrong: " + xhttp_request.status)
             return;
         }
 
@@ -176,4 +178,3 @@ function collect_args(){
 }
 
 window.onload = get_and_validate_audio_id
-

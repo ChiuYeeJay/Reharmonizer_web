@@ -10,6 +10,7 @@ function harmonization_suceed(){
     }
     else{
         console.warn("something wrong: " + this.status);
+        window.alert("something wrong: " + this.status)
     }
 }
 
@@ -30,6 +31,7 @@ function audio2midi_suceeded(){
     }
     else{
         console.warn("something wrong: " + this.status);
+        window.alert("something wrong: " + this.status)
     }
 }
 
@@ -52,6 +54,7 @@ function submit_suceeded(){
     }
     else{
         console.warn("something wrong: " + this.status);
+        window.alert("something wrong: " + this.status)
     }
 }
 
