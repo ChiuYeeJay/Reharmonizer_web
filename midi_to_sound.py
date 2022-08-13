@@ -19,9 +19,9 @@ def process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path)
 PIANO_SOUND_PATH = "piano_sound/"
 
 def turn_midi_file_into_wav(midi_file_path, wav_file_path):
-    print(f"start render {midi_file_path} to {wav_file_path}...")
+    # print(f"start render {midi_file_path} to {wav_file_path}...")
     piano_synth.midi_file_to_wav(midi_file_path, wav_file_path, PIANO_SOUND_PATH)
-    print("render finish!")
+    # print("render finish!")
 
 # %%
 def combine_sounds(file_paths:dict, would_be_combined:list[bool] = [True, True, True], output_path = ""):
@@ -36,7 +36,7 @@ def combine_sounds(file_paths:dict, would_be_combined:list[bool] = [True, True, 
     harmony_sound = pydub.effects.normalize(harmony_sound, 10)
     sound_list = [original_sound, melody_sound, harmony_sound]
 
-    print("start combine...")
+    # print("start combine...")
     combined_sound: pydub.AudioSegment = pydub.AudioSegment.silent(len(original_sound))
     for i, sound in enumerate(sound_list):
         if not would_be_combined[i]: continue
@@ -46,7 +46,7 @@ def combine_sounds(file_paths:dict, would_be_combined:list[bool] = [True, True, 
     if output_path == "":
         output_path = file_paths["result"]
     combined_sound.export(output_path, format="mp3", bitrate="312k")
-    print("combine finish!")
+    # print("combine finish!")
 
 # %%
 def midis_to_sound(original_sound_path:str, melody_midi_path:str, harmony_midi_path:str):

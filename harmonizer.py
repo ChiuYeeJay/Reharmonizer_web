@@ -323,9 +323,9 @@ def melody_segmentation_ad_midiIO(melody_midi_name: str, output_name: str):
     on_time = 0
     last_chord = make_a_fake_last_chord_for_the_first_chord(OCTAVE)
     for track_iteration, track in enumerate(input_midi.tracks):
-        print('Track {}: {}'.format(track_iteration, track.name))
+        # print('Track {}: {}'.format(track_iteration, track.name))
         for msg_iteration, msg in enumerate(track):
-            print("round "+ str(msg_iteration) + " : " + str(msg))
+            # print("round "+ str(msg_iteration) + " : " + str(msg))
             if msg.is_meta:
                 if(msg.type == 'end_of_track' and len(note_list)!=0):
                     chord, chord_notation = many_notes_harmonize(note_list, OCTAVE, last_chord)

@@ -108,10 +108,10 @@ def probabilities(y, note_min, note_max, sr, frame_length, window_length, hop_le
     n_notes = midi_max - midi_min + 1
     
     # F0 and voicing
-    f0, voiced_flag, voiced_prob = librosa.pyin(y, fmin*0.9, fmax*1.1, sr, frame_length, window_length, hop_length)
+    f0, voiced_flag, voiced_prob = librosa.pyin(y=y, fmin=fmin*0.9, fmax=fmax*1.1, sr=sr, frame_length=frame_length, win_length=window_length, hop_length=hop_length)
     tuning = librosa.pitch_tuning(f0)
     f0_ = np.round(librosa.hz_to_midi(f0-tuning)).astype(int)
-    onsets = librosa.onset.onset_detect(y, sr=sr, hop_length=hop_length, backtrack=True)
+    onsets = librosa.onset.onset_detect(y=y, sr=sr, hop_length=hop_length, backtrack=True)
 
 
     P = np.ones( (n_notes*2 + 1, len(f0)) )
@@ -235,8 +235,8 @@ def pianoroll_to_midi(y, pianoroll):
     None.
 
     """
-    bpm = librosa.beat.tempo(y)[0]
-    print(bpm)
+    bpm = librosa.beat.tempo(y=y)[0]
+    # print(bpm)
     quarter_note = 60/bpm
     ticks_per_quarter = 1024
     

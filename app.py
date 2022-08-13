@@ -45,7 +45,6 @@ def get_uploaded_audio():
     workspace_path = LOCAL_TEMPFILE_PATH + audio_id
     os.mkdir(workspace_path)
 
-    print(f"id:{audio_id} upload")
     assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
 
     request.files["original_audio"].save(workspace_path+"/origin.wav")
@@ -55,7 +54,6 @@ def get_uploaded_audio():
 def go_audio2midi():
     audio_id = request.json.get("audio_id")
     workspace_path = LOCAL_TEMPFILE_PATH + audio_id
-    print(f"id:'{workspace_path}' audio2midi")
     assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
 
     audio2midi.run(workspace_path+'/origin.wav', workspace_path+'/melody.mid')
@@ -106,7 +104,6 @@ def generating_audio_mix_is_needed(result_path, harmony_included, workspace_path
 @app.post("/second/validate_audio_id")
 def validate_audio_id():
     audio_id = request.json.get("audio_id")
-    print(f"valid: {os.path.exists(LOCAL_TEMPFILE_PATH + audio_id)}")
     return jsonify({"is_valid":os.path.exists(LOCAL_TEMPFILE_PATH + audio_id)})
 
 @app.post("/second/mix_audio")
@@ -157,7 +154,6 @@ def hamonize_again():
     harmonization_args = request.json.get("args")
     audio_id = request.json.get("audio_id")
     workspace_path = LOCAL_TEMPFILE_PATH + audio_id
-    print(harmonization_args)
     melody_midi_path = workspace_path + '/melody.mid'
     harmony_midi_path = workspace_path + '/harmony.mid'
     harmony_wav_path = workspace_path + '/harmony.wav'
