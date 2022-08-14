@@ -69,3 +69,22 @@ function submit_audio(){
     audio_submit_request.responseType = "json"
     audio_submit_request.send(new FormData(form_element));
 }
+
+function on_audio_chosen(){
+    let submit_btn_element = document.getElementById("submit_btn");
+    let fileinput_element = document.getElementById("audio_upload");
+    if(fileinput_element.value == "") return;
+    submit_btn_element.disabled = true;
+    let url = URL.createObjectURL(fileinput_element.files[0]);
+    let audio = new Audio(url);
+    audio.oncanplaythrough = ()=>{
+        // console.log(audio.duration);
+        if(audio.duration > 180){
+            alert("audio length too long, it must be less then 180s")
+            return;
+        }
+        document.getElementById("submit_btn").disabled = false;
+    }
+}
+
+window.onload = on_audio_chosen;
