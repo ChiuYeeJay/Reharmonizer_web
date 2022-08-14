@@ -3,6 +3,7 @@ import harmonizer
 import midi_to_sound
 import time
 import os
+import pydub
 from flask import Flask, abort, jsonify, redirect, render_template, send_file, url_for
 from flask import request
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -46,17 +47,24 @@ def get_uploaded_audio():
     os.mkdir(workspace_path)
 
     assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
-
-    request.files["original_audio"].save(workspace_path+"/origin.wav")
+    uploaded_audio = request.files["original_audio"]
+    file_extension = uploaded_audio.filename[uploaded_audio.filename.rfind("."):]
+    uploaded_audio.save(workspace_path+"/origin"+file_extension)
+    if file_extension != ".wav":
+        would_be_converted = pydub.AudioSegment.from_file(workspace_path+"/origin"+file_extension)
+        would_be_converted.export(out_f=workspace_path+"/origin.wav", format="wav")
+        os.remove(workspace_path+"/origin"+file_extension)
     return jsonify({"audio_id":audio_id})
 
 @app.post("/audio2midi")
 def go_audio2midi():
+    clk_start = time.time()
     audio_id = request.json.get("audio_id")
     workspace_path = LOCAL_TEMPFILE_PATH + audio_id
     assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
 
     audio2midi.run(workspace_path+'/origin.wav', workspace_path+'/melody.mid')
+    print(f"audio2midi time: {time.time()-clk_start}")
     return jsonify({"status":"audio processed!"})
 
 @app.post("/harmonize")
