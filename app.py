@@ -5,10 +5,9 @@ import midi_to_sound
 import time
 import os
 import pydub
-from flask import Flask, abort, jsonify, redirect, render_template, send_file, url_for
+from flask import Flask, abort, jsonify, redirect, render_template, send_file, url_for,  send_from_directory
 from flask import request
 from werkzeug.middleware.proxy_fix import ProxyFix
-
 PYTHON = "python3.9"
 AUDIO2MIDI_PATH = "audio_to_midi/audio2midi.py"
 LOCAL_TEMPFILE_PATH = "tempfiles/"
@@ -31,7 +30,9 @@ def generate_audio_id():
     return inner_name
 
 
-app = Flask(__name__, static_folder='my-app/build', static_url_path='/')
+app = Flask(__name__, static_folder='reharm/.next/static/', template_folder='reharm/.next/server/pages',
+            static_url_path='/_next/static')
+
 app.wsgi_app = ProxyFix(
     app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
 )
@@ -39,17 +40,14 @@ app.wsgi_app = ProxyFix(
 
 @app.route("/")
 def index():
-    return app.send_static_file('index.html')
-
+    return render_template('index.html')
     # def entry_page():
     #     return render_template('entry.htm', entry_js_url=url_for('static', filename='entry.js'))
 
 
 @app.route("/second")
 def second_page():
-    print("show second page")
-    # return render_template("second.htm", second_js_url=url_for('static', filename='second.js'))
-    return app.send_static_file('index.html')
+    return render_template('second.html')
 
 
 @app.post("/upload")
