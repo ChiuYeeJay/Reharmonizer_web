@@ -1,12 +1,12 @@
 "use strict";
 
-var audio_id = ""
+var audio_id = "";
 
 function get_and_validate_audio_id(){
     let url_param = new URLSearchParams(window.location.search);
     if(url_param.has("audio_id")){
         audio_id = url_param.get("audio_id");
-        console.log("audio_id: " + audio_id)
+        console.log("audio_id: " + audio_id);
         post_sender("/second/validate_audio_id", JSON.stringify({"audio_id":audio_id}), start, 
                     "application/json", "json");
     }
@@ -36,25 +36,25 @@ function post_sender(action, data, handler, content_type="", response_type=""){
         if (xhttp_request.readyState != XMLHttpRequest.DONE) return;
         if (xhttp_request.status !== 200) {
             console.warn("something wrong in " + action + ": " + xhttp_request.status);
-            window.alert("something wrong: " + xhttp_request.status)
+            window.alert("something wrong: " + xhttp_request.status);
             return;
         }
 
-        handler(xhttp_request)
+        handler(xhttp_request);
     }
     xhttp_request.open("POST", action);
-    if(response_type != "") xhttp_request.responseType = response_type
+    if(response_type != "") xhttp_request.responseType = response_type;
     if(content_type != "") xhttp_request.setRequestHeader("Content-Type", content_type+";charset=UTF-8");
     xhttp_request.send(data);
 }
 
 function go_back_entry(){
-    window.location.assign("/")
+    window.location.assign("/");
 }
 
 function mix_audio_response_handler(xhttp_request){
     // console.log(xhttp_request.response)
-    let blob_url = URL.createObjectURL(xhttp_request.response)
+    let blob_url = URL.createObjectURL(xhttp_request.response);
     document.getElementById("audio_waiting_hint").hidden = true;
     document.getElementById("mixed_audio_ctrlr").src = blob_url;
     document.getElementById("mixed_audio_ctrlr").hidden = false;
@@ -78,15 +78,15 @@ function get_mixed_audio_btn_clicked(){
 }
 
 function request_midi_dowload_link(){
-    let melody_data = JSON.stringify({"which_midi":"melody", "audio_id":audio_id})
+    let melody_data = JSON.stringify({"which_midi":"melody", "audio_id":audio_id});
     post_sender("/second/get_midi_file", melody_data, function(xhttp_request){
-        let blob_url = URL.createObjectURL(xhttp_request.response)
+        let blob_url = URL.createObjectURL(xhttp_request.response);
         document.getElementById("melody_midi_dl_link").href = blob_url;
     }, "application/json", "blob");
 
     let harmony_data = JSON.stringify({"which_midi":"harmony", "audio_id":audio_id})
     post_sender("/second/get_midi_file", harmony_data, function(xhttp_request){
-        let blob_url = URL.createObjectURL(xhttp_request.response)
+        let blob_url = URL.createObjectURL(xhttp_request.response);
         document.getElementById("harmony_midi_dl_link").href = blob_url;
     }, "application/json", "blob");
 }
@@ -106,7 +106,7 @@ function request_harmonizing_again(){
         request_midi_dowload_link();
         request_chords();
         document.getElementById("regenerate_hint").hidden = true;
-    }, "application/json", "text")
+    }, "application/json", "text");
 }
 
 function display_value_of_range(id, suffix=""){
@@ -119,7 +119,7 @@ function refresh_arg_value_display(){
     let form_node = document.getElementById("harmonization_arg_inputs_form");
     let inputs_list = form_node.getElementsByTagName("input");
     for(let i=0;i<inputs_list.length;i++){
-        let input_element = inputs_list[i]
+        let input_element = inputs_list[i];
         if(input_element.type != "range") continue;
         setTimeout(()=>{
             input_element.oninput();
@@ -177,4 +177,4 @@ function collect_args(){
     return args;
 }
 
-window.onload = get_and_validate_audio_id
+window.onload = get_and_validate_audio_id;

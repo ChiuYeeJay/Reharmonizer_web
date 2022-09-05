@@ -1,6 +1,6 @@
 "use strict";
 
-var audio_id = ""
+var audio_id = "";
 
 function post_sender(action, data, handler, content_type="", response_type=""){
     let xhttp_request = new XMLHttpRequest();
@@ -8,21 +8,21 @@ function post_sender(action, data, handler, content_type="", response_type=""){
         if (xhttp_request.readyState != XMLHttpRequest.DONE) return;
         if (xhttp_request.status !== 200) {
             console.warn("something wrong in " + action + ": " + xhttp_request.status);
-            window.alert("something wrong: " + xhttp_request.status)
+            window.alert("something wrong: " + xhttp_request.status);
             return;
         }
 
-        handler(xhttp_request)
+        handler(xhttp_request);
     }
     xhttp_request.open("POST", action);
-    if(response_type != "") xhttp_request.responseType = response_type
+    if(response_type != "") xhttp_request.responseType = response_type;
     if(content_type != "") xhttp_request.setRequestHeader("Content-Type", content_type+";charset=UTF-8");
     xhttp_request.send(data);
 }
 
 function harmonization_suceed(xhttp_request){
-    document.getElementById("upload_status").innerText = "redirect..."
-    window.location.assign(xhttp_request.responseText)
+    document.getElementById("upload_status").innerText = "redirect...";
+    window.location.assign(xhttp_request.responseText);
 }
 
 function start_harmonization(){
@@ -52,15 +52,15 @@ function start_audio2midi(){
 
 function submit_suceeded(xhttp_request){
     audio_id = xhttp_request.response.audio_id;
-    console.log("audio_id: " + audio_id)
-    document.getElementById("upload_status").innerText = "processing audio..."
-    start_audio2midi()
+    console.log("audio_id: " + audio_id);
+    document.getElementById("upload_status").innerText = "processing audio...";
+    start_audio2midi();
 }
 
 function submit_audio(){
-    let form_element = document.getElementById("audio_form")
+    let form_element = document.getElementById("audio_form");
     form_element.hidden = true;
-    document.getElementById("upload_status").innerText = "uploading audio..."
+    document.getElementById("upload_status").innerText = "uploading audio...";
     
     post_sender(form_element.action, new FormData(form_element), submit_suceeded, "", "json");
 }
@@ -75,7 +75,7 @@ function on_audio_chosen(){
     audio.oncanplaythrough = ()=>{
         // console.log(audio.duration);
         if(audio.duration > 180){
-            alert("audio length too long, it must be less then 180s")
+            alert("audio length too long, it must be less then 180s");
             return;
         }
         document.getElementById("submit_btn").disabled = false;
