@@ -8,3 +8,4 @@ tempfiles/*
 # for cyc
 example_audios/*
 heroku_cmd.md
+celery_cmd.md

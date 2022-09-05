@@ -1,6 +1,6 @@
-import audio2midi_modified as audio2midi
 import harmonizer
 import midi_to_sound
+import celery_tasks
 import time
 import os
 import pydub
@@ -9,7 +9,6 @@ from flask import request
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 PYTHON = "python3.9"
-AUDIO2MIDI_PATH = "audio_to_midi/audio2midi.py"
 LOCAL_TEMPFILE_PATH = "tempfiles/"
 
 def save_chord_record(chord_record: list, path: str):
@@ -58,14 +57,18 @@ def get_uploaded_audio():
 
 @app.post("/audio2midi")
 def go_audio2midi():
-    clk_start = time.time()
     audio_id = request.json.get("audio_id")
     workspace_path = LOCAL_TEMPFILE_PATH + audio_id
     assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
+    celery_tasks.audio2midi_background.delay(workspace_path)
+    return jsonify({"status":"process start!"})
 
-    audio2midi.run(workspace_path+'/origin.wav', workspace_path+'/melody.mid')
-    print(f"audio2midi time: {time.time()-clk_start}")
-    return jsonify({"status":"audio processed!"})
+@app.post("/whether_audio2midi_completed")
+def whether_audio2midi_completed():
+    audio_id = request.json.get("audio_id")
+    workspace_path = LOCAL_TEMPFILE_PATH + audio_id
+    assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
+    return jsonify({"status":os.path.exists(workspace_path+'/melody.mid')})
 
 @app.post("/harmonize")
 def go_harmonizing():
@@ -77,8 +80,7 @@ def go_harmonizing():
     melody_midi_path = workspace_path + '/melody.mid'
     harmony_midi_path = workspace_path + '/harmony.mid'
     result111_path = workspace_path + '/result111.mp3'
-    if not os.path.exists(melody_midi_path):
-        return url_for("second_page")
+    assert os.path.exists(melody_midi_path), f"{melody_midi_path} doesn't exist!"
     chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg=args)
     save_chord_record(chord_record, workspace_path + '/chord.txt')
     
@@ -172,3 +174,5 @@ def hamonize_again():
     
     midi_to_sound.turn_midi_file_into_wav(harmony_midi_path, harmony_wav_path)
     return ""
+
+# def whether_sth_completed():

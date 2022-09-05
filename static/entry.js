@@ -31,14 +31,23 @@ function start_harmonization(){
         "application/json", "text");
 }
 
-function audio2midi_suceeded(xhttp_request){
-    document.getElementById("upload_status").innerText = "harmonizing..."
-    start_harmonization()
+function ask_whether_audio2midi_completed(){
+    console.log("ask_whether_audio2midi_completed");
+    post_sender("/whether_audio2midi_completed", JSON.stringify({"audio_id":audio_id}), (xhttp_request)=>{
+        console.log(xhttp_request.response.status);
+        if(xhttp_request.response.status){
+            document.getElementById("upload_status").innerText = "harmonizing...";
+            start_harmonization();
+        }
+        else{
+            setTimeout(ask_whether_audio2midi_completed, 3000);
+        }
+    }, "application/json", "json");
 }
 
 function start_audio2midi(){
-    post_sender("/audio2midi", JSON.stringify({"audio_id":audio_id}), audio2midi_suceeded,
-                "application/json")
+    post_sender("/audio2midi", JSON.stringify({"audio_id":audio_id}), 
+                (xhttp_request)=>{ask_whether_audio2midi_completed();}, "application/json");
 }
 
 function submit_suceeded(xhttp_request){

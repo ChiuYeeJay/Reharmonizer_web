@@ -6,3 +6,4 @@ midiutil
 mido
 pretty_midi
 gunicorn
+celery
