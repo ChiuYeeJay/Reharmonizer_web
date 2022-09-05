@@ -30,7 +30,7 @@ function start(xhttp_request){
     refresh_arg_value_display();
 }
 
-function post_sender(action, data, handler, content_type="application/json", response_type=""){
+function post_sender(action, data, handler, content_type="", response_type=""){
     let xhttp_request = new XMLHttpRequest();
     xhttp_request.onreadystatechange = ()=>{
         if (xhttp_request.readyState != XMLHttpRequest.DONE) return;
@@ -43,8 +43,8 @@ function post_sender(action, data, handler, content_type="application/json", res
         handler(xhttp_request)
     }
     xhttp_request.open("POST", action);
-    xhttp_request.responseType = response_type
-    xhttp_request.setRequestHeader("Content-Type", content_type+";charset=UTF-8");
+    if(response_type != "") xhttp_request.responseType = response_type
+    if(content_type != "") xhttp_request.setRequestHeader("Content-Type", content_type+";charset=UTF-8");
     xhttp_request.send(data);
 }
 
