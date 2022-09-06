@@ -1,6 +1,7 @@
 "use strict";
 
 var audio_id = "";
+var asking_interval = 2000;
 
 function get_and_validate_audio_id(){
     let url_param = new URLSearchParams(window.location.search);
@@ -97,16 +98,32 @@ function request_chords(){
     }, "application/json", "text");
 }
 
+var last_mtime;
+
+function ask_whether_harmonize_again_completed(){
+    post_sender("/whether_harmonize_again_completed", 
+        JSON.stringify({"audio_id":audio_id, "last_mtime":last_mtime}), 
+        (xhttp_request)=>{
+            if(xhttp_request.response.status){
+                get_mixed_audio_btn_clicked();
+                request_midi_dowload_link();
+                request_chords();
+                document.getElementById("regenerate_hint").hidden = true;
+            }
+            else{
+                setTimeout(ask_whether_harmonize_again_completed, asking_interval);
+            }
+    }, "application/json", "json");
+}
+
 function request_harmonizing_again(){
     document.getElementById("regenerate_hint").hidden = false;
     let harmonization_args = collect_args();
     let sent_data = JSON.stringify({"audio_id":audio_id, "args":harmonization_args})
     post_sender("/second/hamonize_again", sent_data, function(xhttp_request){
-        get_mixed_audio_btn_clicked();
-        request_midi_dowload_link();
-        request_chords();
-        document.getElementById("regenerate_hint").hidden = true;
-    }, "application/json", "text");
+        last_mtime = xhttp_request.response.last_mtime;
+        ask_whether_harmonize_again_completed()
+    }, "application/json", "json");
 }
 
 function display_value_of_range(id, suffix=""){

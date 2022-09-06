@@ -1,4 +1,3 @@
-import harmonizer
 import midi_to_sound
 import celery_tasks
 import time
@@ -10,11 +9,6 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 PYTHON = "python3.9"
 LOCAL_TEMPFILE_PATH = "tempfiles/"
-
-def save_chord_record(chord_record: list, path: str):
-    chord_file = open(path, 'w')
-    chord_file.write("\n".join(chord_record))
-    chord_file.close()
 
 def generate_audio_id():
     inner_name = str(hash(time.time()))
@@ -61,7 +55,7 @@ def go_audio2midi():
     workspace_path = LOCAL_TEMPFILE_PATH + audio_id
     assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
     celery_tasks.audio2midi_background.delay(workspace_path)
-    return jsonify({"status":"process start!"})
+    return jsonify({"status":"audio2midi start!"})
 
 @app.post("/whether_audio2midi_completed")
 def whether_audio2midi_completed():
@@ -72,21 +66,22 @@ def whether_audio2midi_completed():
 
 @app.post("/harmonize")
 def go_harmonizing():
-    args = request.json.get("args")
+    harmonization_args = request.json.get("args")
     audio_id = request.json.get("audio_id")
     workspace_path = LOCAL_TEMPFILE_PATH + audio_id
 
-    original_sound_path = workspace_path + '/origin.wav'
-    melody_midi_path = workspace_path + '/melody.mid'
-    harmony_midi_path = workspace_path + '/harmony.mid'
-    result111_path = workspace_path + '/result111.mp3'
-    assert os.path.exists(melody_midi_path), f"{melody_midi_path} doesn't exist!"
-    chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg=args)
-    save_chord_record(chord_record, workspace_path + '/chord.txt')
-    
-    midi_to_sound_file_paths = midi_to_sound.midis_to_sound(original_sound_path, melody_midi_path, harmony_midi_path)
-    midi_to_sound.combine_sounds(midi_to_sound_file_paths, [True, True, True], result111_path)
-    return url_for("second_page", audio_id=audio_id)
+    assert os.path.exists(workspace_path + '/melody.mid'), f"{workspace_path + '/melody.mid'} doesn't exist!"
+    celery_tasks.harmonizing_background.delay(workspace_path, harmonization_args)
+    return jsonify({"status":"harmonizing start!"})
+
+@app.post("/whether_harmonize_completed")
+def whether_harmonize_completed():
+    audio_id = request.json.get("audio_id")
+    workspace_path = LOCAL_TEMPFILE_PATH + audio_id
+    assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
+    is_completed = os.path.exists(workspace_path + '/result111.mp3')
+    second_url = url_for("second_page", audio_id=audio_id) if is_completed else ""
+    return jsonify({"status":is_completed, "second_url":second_url})
 
 def generate_mix_audio_name(would_be_combined):
     name = "result"
@@ -129,7 +124,7 @@ def go_mixing_audio():
     result_path = workspace_path + "/" + generate_mix_audio_name(would_be_combined)
     harmony_included = would_be_combined[2]
     if generating_harmony_wav_is_needed(harmony_included, workspace_path):
-        midi_to_sound.turn_midi_file_into_wav(workspace_path + '/harmony.wav')
+        midi_to_sound.turn_midi_file_into_wav(harmony_midi_path, workspace_path + '/harmony.wav')
     if generating_audio_mix_is_needed(result_path, harmony_included, workspace_path):
         midi2sound_file_paths = midi_to_sound.process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path)
         midi_to_sound.combine_sounds(midi2sound_file_paths, would_be_combined, result_path)
@@ -164,15 +159,27 @@ def hamonize_again():
     harmonization_args = request.json.get("args")
     audio_id = request.json.get("audio_id")
     workspace_path = LOCAL_TEMPFILE_PATH + audio_id
-    melody_midi_path = workspace_path + '/melody.mid'
-    harmony_midi_path = workspace_path + '/harmony.mid'
-    harmony_wav_path = workspace_path + '/harmony.wav'
-    if not os.path.exists(melody_midi_path):
-        abort(400)
-    chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg=harmonization_args)
-    save_chord_record(chord_record, workspace_path + '/chord.txt')
-    
-    midi_to_sound.turn_midi_file_into_wav(harmony_midi_path, harmony_wav_path)
-    return ""
+    assert os.path.exists(workspace_path + '/melody.mid'), f"{workspace_path + '/melody.mid'} doesn't exist!"
 
+    if os.path.exists(workspace_path + '/chord.txt'):
+        last_chord_mtime = os.path.getmtime(workspace_path + '/chord.txt')
+    else:
+        last_chord_mtime = 0
+    
+    celery_tasks.harmonize_again_background.delay(workspace_path, harmonization_args)
+    return jsonify({"status":"hamonize_again start!", "last_mtime":last_chord_mtime})
+
+@app.post("/whether_harmonize_again_completed")
+def whether_harmonize_again_completed():
+    audio_id = request.json.get("audio_id")
+    last_mtime = request.json.get("last_mtime")
+    workspace_path = LOCAL_TEMPFILE_PATH + audio_id
+    assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
+
+    if os.path.exists(workspace_path + '/chord.txt'):
+        is_completed = os.path.getmtime(workspace_path + '/chord.txt') > last_mtime
+    else:
+        is_completed = False
+    
+    return jsonify({"status":is_completed})
 # def whether_sth_completed():

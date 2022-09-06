@@ -1,6 +1,7 @@
 "use strict";
 
 var audio_id = "";
+var asking_interval = 2000;
 
 function post_sender(action, data, handler, content_type="", response_type=""){
     let xhttp_request = new XMLHttpRequest();
@@ -20,27 +21,32 @@ function post_sender(action, data, handler, content_type="", response_type=""){
     xhttp_request.send(data);
 }
 
-function harmonization_suceed(xhttp_request){
-    document.getElementById("upload_status").innerText = "redirect...";
-    window.location.assign(xhttp_request.responseText);
+function ask_whether_harmonize_completed(){
+    post_sender("/whether_harmonize_completed", JSON.stringify({"audio_id":audio_id}), (xhttp_request)=>{
+        if(xhttp_request.response.status){
+            document.getElementById("upload_status").innerText = "redirect...";
+            window.location.assign(xhttp_request.response.second_url);
+        }
+        else{
+            setTimeout(ask_whether_harmonize_completed, asking_interval);
+        }
+    }, "application/json", "json");
 }
 
 function start_harmonization(){
     let harmonization_data = JSON.stringify({"args":{"octave":4}, "audio_id":audio_id});
-    post_sender("/harmonize", harmonization_data, harmonization_suceed, 
+    post_sender("/harmonize", harmonization_data, ask_whether_harmonize_completed, 
         "application/json", "text");
 }
 
 function ask_whether_audio2midi_completed(){
-    console.log("ask_whether_audio2midi_completed");
     post_sender("/whether_audio2midi_completed", JSON.stringify({"audio_id":audio_id}), (xhttp_request)=>{
-        console.log(xhttp_request.response.status);
         if(xhttp_request.response.status){
             document.getElementById("upload_status").innerText = "harmonizing...";
             start_harmonization();
         }
         else{
-            setTimeout(ask_whether_audio2midi_completed, 3000);
+            setTimeout(ask_whether_audio2midi_completed, asking_interval);
         }
     }, "application/json", "json");
 }
