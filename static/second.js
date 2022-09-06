@@ -1,7 +1,8 @@
 "use strict";
 
 var audio_id = "";
-var asking_interval = 2000;
+var hamonize_again_asking_interval = 1000;
+var mix_audio_asking_interval = 1000;
 
 function get_and_validate_audio_id(){
     let url_param = new URLSearchParams(window.location.search);
@@ -64,7 +65,7 @@ function ask_whether_mix_audio_completed(last_mtime, would_be_combined){
             document.getElementById("dl_mixed_audio_link").href = blob_url;
         }
         else{
-            setTimeout(()=>{ask_whether_mix_audio_completed(last_mtime, would_be_combined)}, asking_interval);
+            setTimeout(()=>{ask_whether_mix_audio_completed(last_mtime, would_be_combined)}, mix_audio_asking_interval);
         }
     }, "application/json", "blob");
 }
@@ -116,7 +117,7 @@ function ask_whether_harmonize_again_completed(last_mtime){
                 document.getElementById("regenerate_hint").hidden = true;
             }
             else{
-                setTimeout(()=>{ask_whether_harmonize_again_completed(last_mtime);}, asking_interval);
+                setTimeout(()=>{ask_whether_harmonize_again_completed(last_mtime);}, hamonize_again_asking_interval);
             }
     }, "application/json", "json");
 }

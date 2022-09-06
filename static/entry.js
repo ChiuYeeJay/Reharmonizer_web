@@ -1,7 +1,8 @@
 "use strict";
 
 var audio_id = "";
-var asking_interval = 2000;
+var audio2midi_asking_interval = 2000;
+var harmonize_asking_interval = 1000;
 
 function post_sender(action, data, handler, content_type="", response_type=""){
     let xhttp_request = new XMLHttpRequest();
@@ -28,7 +29,7 @@ function ask_whether_harmonize_completed(){
             window.location.assign(xhttp_request.response.second_url);
         }
         else{
-            setTimeout(ask_whether_harmonize_completed, asking_interval);
+            setTimeout(ask_whether_harmonize_completed, harmonize_asking_interval);
         }
     }, "application/json", "json");
 }
@@ -46,7 +47,7 @@ function ask_whether_audio2midi_completed(){
             start_harmonization();
         }
         else{
-            setTimeout(ask_whether_audio2midi_completed, asking_interval);
+            setTimeout(ask_whether_audio2midi_completed, audio2midi_asking_interval);
         }
     }, "application/json", "json");
 }
