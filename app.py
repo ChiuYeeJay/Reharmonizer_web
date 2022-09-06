@@ -79,7 +79,10 @@ def whether_harmonize_completed():
     audio_id = request.json.get("audio_id")
     workspace_path = LOCAL_TEMPFILE_PATH + audio_id
     assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
-    is_completed = os.path.exists(workspace_path + '/result111.mp3')
+    if os.path.exists(workspace_path + '/result111.mp3'):
+        is_completed = os.path.getsize(workspace_path + '/result111.mp3') != 0
+    else:
+        is_completed = False
     second_url = url_for("second_page", audio_id=audio_id) if is_completed else ""
     return jsonify({"status":is_completed, "second_url":second_url})
 
@@ -128,7 +131,9 @@ def go_mixing_audio():
     if generating_audio_mix_is_needed(result_path, harmony_included, workspace_path):
         midi2sound_file_paths = midi_to_sound.process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path)
         midi_to_sound.combine_sounds(midi2sound_file_paths, would_be_combined, result_path)
-    return send_file(result_path, mimetype="audio/wav", download_name="mixed_audio.wav")
+    print(f"getsize:{os.path.getsize(result_path)}")
+    print(f"getctime:{os.path.getctime(result_path)}")
+    return send_file(result_path, mimetype="audio/mp3", download_name="mixed_audio.mp3")
 
 @app.post("/second/get_midi_file")
 def get_midi_file_blob():
