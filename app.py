@@ -1,4 +1,3 @@
-import midi_to_sound
 import celery_tasks
 import time
 import os
@@ -101,8 +100,10 @@ def generating_harmony_wav_is_needed(harmony_included, workspace_path):
     else:
         return os.path.getmtime(workspace_path + '/harmony.wav') < os.path.getmtime(workspace_path + '/harmony.mid')
 
-def generating_audio_mix_is_needed(result_path, harmony_included, workspace_path):
-    if not os.path.exists(result_path):
+def generating_audio_mix_is_needed(harmony_wav_needed, result_path, harmony_included, workspace_path):
+    if harmony_wav_needed:
+        return True
+    elif not os.path.exists(result_path):
         return True
     elif not harmony_included:
         return False
@@ -120,20 +121,36 @@ def go_mixing_audio():
     would_be_combined = request.json.get("would_be_combined")
     workspace_path = LOCAL_TEMPFILE_PATH + audio_id
 
-    original_sound_path = workspace_path + '/origin.wav'
-    melody_midi_path = workspace_path + '/melody.mid'
-    harmony_midi_path = workspace_path + '/harmony.mid'
 
     result_path = workspace_path + "/" + generate_mix_audio_name(would_be_combined)
     harmony_included = would_be_combined[2]
-    if generating_harmony_wav_is_needed(harmony_included, workspace_path):
-        midi_to_sound.turn_midi_file_into_wav(harmony_midi_path, workspace_path + '/harmony.wav')
-    if generating_audio_mix_is_needed(result_path, harmony_included, workspace_path):
-        midi2sound_file_paths = midi_to_sound.process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path)
-        midi_to_sound.combine_sounds(midi2sound_file_paths, would_be_combined, result_path)
-    print(f"getsize:{os.path.getsize(result_path)}")
-    print(f"getctime:{os.path.getctime(result_path)}")
-    return send_file(result_path, mimetype="audio/mp3", download_name="mixed_audio.mp3")
+    harmony_wav_needed = generating_harmony_wav_is_needed(harmony_included, workspace_path)
+    audio_mix_needed = generating_audio_mix_is_needed(harmony_wav_needed, result_path, harmony_included, workspace_path)
+    if harmony_wav_needed or audio_mix_needed:
+        if os.path.exists(result_path):
+            last_mtime = os.path.getmtime(result_path)
+        else:
+            last_mtime = 0
+        celery_tasks.mixing_audio_background.delay(workspace_path, result_path, would_be_combined, harmony_wav_needed, audio_mix_needed)
+    else:
+        last_mtime = 0
+
+    return jsonify({"status":"start mixing audio", "last_mtime":last_mtime})
+
+@app.post("/second/whether_mix_audio_completed")
+def whether_mix_audio_completed():
+    audio_id = request.json.get("audio_id")
+    would_be_combined = request.json.get("would_be_combined")
+    last_mtime = request.json.get("last_mtime")
+    workspace_path = LOCAL_TEMPFILE_PATH + audio_id
+    result_path = workspace_path + "/" + generate_mix_audio_name(would_be_combined)
+
+    assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
+    content = ""
+    if os.path.exists(result_path) and os.path.getmtime(result_path) > last_mtime and os.path.getsize(result_path):
+        content = send_file(result_path, mimetype="audio/mp3", download_name="mixed_audio.mp3")
+
+    return content
 
 @app.post("/second/get_midi_file")
 def get_midi_file_blob():

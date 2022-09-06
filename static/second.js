@@ -53,13 +53,20 @@ function go_back_entry(){
     window.location.assign("/");
 }
 
-function mix_audio_response_handler(xhttp_request){
-    // console.log(xhttp_request.response)
-    let blob_url = URL.createObjectURL(xhttp_request.response);
-    document.getElementById("audio_waiting_hint").hidden = true;
-    document.getElementById("mixed_audio_ctrlr").src = blob_url;
-    document.getElementById("mixed_audio_ctrlr").hidden = false;
-    document.getElementById("dl_mixed_audio_link").href = blob_url;
+function ask_whether_mix_audio_completed(last_mtime, would_be_combined){
+    let data = JSON.stringify({"audio_id":audio_id, "last_mtime":last_mtime, "would_be_combined":would_be_combined});
+    post_sender("/second/whether_mix_audio_completed", data, (xhttp_request)=>{
+        if(xhttp_request.response.size != 0){
+            let blob_url = URL.createObjectURL(xhttp_request.response);
+            document.getElementById("audio_waiting_hint").hidden = true;
+            document.getElementById("mixed_audio_ctrlr").src = blob_url;
+            document.getElementById("mixed_audio_ctrlr").hidden = false;
+            document.getElementById("dl_mixed_audio_link").href = blob_url;
+        }
+        else{
+            setTimeout(()=>{ask_whether_mix_audio_completed(last_mtime, would_be_combined)}, asking_interval);
+        }
+    }, "application/json", "blob");
 }
 
 function get_mixed_audio_btn_clicked(){
@@ -68,14 +75,14 @@ function get_mixed_audio_btn_clicked(){
     let original_checked = document.getElementById("original_audio_checkbox").checked;
     let melody_checked = document.getElementById("melody_audio_checkbox").checked;
     let harmony_checked = document.getElementById("harmony_audio_checkbox").checked;
-    let checked_list = [original_checked, melody_checked, harmony_checked];
-    if(checked_list == [false, false, false]){
-        alert("check at least one!");
+    let would_be_combined = [original_checked, melody_checked, harmony_checked];
+    if(!(original_checked || melody_checked || harmony_checked)){
+        alert("Check at least one, or it would be silent!");
     }
-    else{
-        let data = JSON.stringify({"would_be_combined":checked_list, "audio_id":audio_id});
-        post_sender("/second/mix_audio", data, mix_audio_response_handler, "application/json", "blob");
-    }
+    let data = JSON.stringify({"would_be_combined":would_be_combined, "audio_id":audio_id});
+    post_sender("/second/mix_audio", data, (xhttp_request)=>{
+        ask_whether_mix_audio_completed(xhttp_request.response.last_mtime, would_be_combined);
+    }, "application/json", "json");
 }
 
 function request_midi_dowload_link(){
@@ -98,9 +105,7 @@ function request_chords(){
     }, "application/json", "text");
 }
 
-var last_mtime;
-
-function ask_whether_harmonize_again_completed(){
+function ask_whether_harmonize_again_completed(last_mtime){
     post_sender("/whether_harmonize_again_completed", 
         JSON.stringify({"audio_id":audio_id, "last_mtime":last_mtime}), 
         (xhttp_request)=>{
@@ -111,18 +116,19 @@ function ask_whether_harmonize_again_completed(){
                 document.getElementById("regenerate_hint").hidden = true;
             }
             else{
-                setTimeout(ask_whether_harmonize_again_completed, asking_interval);
+                setTimeout(()=>{ask_whether_harmonize_again_completed(last_mtime);}, asking_interval);
             }
     }, "application/json", "json");
 }
 
 function request_harmonizing_again(){
     document.getElementById("regenerate_hint").hidden = false;
+    document.getElementById("audio_waiting_hint").hidden = false;
+    document.getElementById("mixed_audio_ctrlr").hidden = true;
     let harmonization_args = collect_args();
     let sent_data = JSON.stringify({"audio_id":audio_id, "args":harmonization_args})
     post_sender("/second/hamonize_again", sent_data, function(xhttp_request){
-        last_mtime = xhttp_request.response.last_mtime;
-        ask_whether_harmonize_again_completed()
+        ask_whether_harmonize_again_completed(xhttp_request.response.last_mtime);
     }, "application/json", "json");
 }
 

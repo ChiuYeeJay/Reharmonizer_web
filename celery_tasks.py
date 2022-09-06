@@ -37,3 +37,15 @@ def harmonize_again_background(workspace_path, harmonization_args):
     harmony_midi_path = workspace_path + '/harmony.mid'
     chord_record = harmonizer.run(input_name=melody_midi_path, output_name=harmony_midi_path, arg=harmonization_args)
     save_chord_record(chord_record, workspace_path + '/chord.txt')
+
+@celery_app.task
+def mixing_audio_background(workspace_path, result_path, would_be_combined, harmony_wav_needed, audio_mix_needed):
+    original_sound_path = workspace_path + '/origin.wav'
+    melody_midi_path = workspace_path + '/melody.mid'
+    harmony_midi_path = workspace_path + '/harmony.mid'
+
+    if harmony_wav_needed:
+        midi_to_sound.turn_midi_file_into_wav(harmony_midi_path, workspace_path + '/harmony.wav')
+    if audio_mix_needed:
+        midi2sound_file_paths = midi_to_sound.process_file_paths(original_sound_path, melody_midi_path, harmony_midi_path)
+        midi_to_sound.combine_sounds(midi2sound_file_paths, would_be_combined, result_path)
