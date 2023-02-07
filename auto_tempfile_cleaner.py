@@ -2,8 +2,8 @@ import os
 import time
 import shutil
 
-CHECK_INTERVAL = 10
-REMOVAL_THRESH = 60
+CHECK_INTERVAL = 3600*6
+REMOVAL_THRESH = 3600
 
 assert os.path.exists("tempfiles")
 os.chdir("tempfiles")
