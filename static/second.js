@@ -51,7 +51,12 @@ function post_sender(action, data, handler, content_type="", response_type=""){
 }
 
 function go_back_entry(){
-    window.location.assign("/");
+    if(document.body.lang == "en"){
+        window.location.assign("/en");
+    }
+    else{
+        window.location.assign("/");
+    }
 }
 
 function ask_whether_mix_audio_completed(last_mtime, would_be_combined){
@@ -156,11 +161,17 @@ function show_hide_arg_form(){
     let form_node = document.getElementById("harmonization_arg_inputs_form");
     if(form_node.hidden){
         form_node.hidden = false;
-        switch_btn.innerText = "隱藏調整參數";
+        if(document.body.lang == "en")
+            switch_btn.innerText = "Hide Args";
+        else
+            switch_btn.innerText = "隱藏調整參數";
     }
     else{
         form_node.hidden = true;
-        switch_btn.innerText = "顯示調整參數";
+        if(document.body.lang == "en")
+            switch_btn.innerText = "Show Args";
+        else
+            switch_btn.innerText = "顯示調整參數";
     }
 }
 

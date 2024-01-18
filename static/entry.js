@@ -23,7 +23,7 @@ function post_sender(action, data, handler, content_type="", response_type=""){
 }
 
 function ask_whether_harmonize_completed(){
-    post_sender("/whether_harmonize_completed", JSON.stringify({"audio_id":audio_id}), (xhttp_request)=>{
+    post_sender("/whether_harmonize_completed", JSON.stringify({"audio_id":audio_id, "lang":document.body.lang}), (xhttp_request)=>{
         if(xhttp_request.response.status){
             document.getElementById("upload_status").innerText = "redirect...";
             window.location.assign(xhttp_request.response.second_url);

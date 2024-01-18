@@ -4,21 +4,21 @@
 <title>Reharmonizer</title>
 <script src="{{entry_js_url}}"></script>
 </head>
-<body lang="zh-tw">
+<body lang="en">
 
 <h1>Reharmon!zer</h1>
 <div>
-    <p>Reharmonizer使你可以上傳任意音檔，系統將會為他量身打造鋼琴的旋律與和聲</p>
-    <p>(音檔時長最長為三分鐘，窩們沒有錢去升級伺服器)</p>
+    <p>You can upload any random audio, the system will generate piano melody and chords for it!</p>
+    <p>(The maximum length of audio file is three minuites.)</p>
 </div>
 <form id="audio_form" method="post" action="/upload" enctype="multipart/form-data">
-    <label for="audio_upload">上傳音檔：</label>
+    <label for="audio_upload">Upload an audio file:</label>
     <input name="original_audio" id="audio_upload" type="file" accept="audio/*"
            formenctype="multipart/form-data" oninput="on_audio_chosen();return true;" required>
-    <input id="submit_btn" type="button" value="上傳" onclick="submit_audio();return true;" disabled>
+    <input id="submit_btn" type="button" value="upload" onclick="submit_audio();return true;" disabled>
 </form>
 <p id="upload_status"></p>
 
-<a href="/en">English</a>
+<a href="/">Chinese</a>
 </body>
 </html> 

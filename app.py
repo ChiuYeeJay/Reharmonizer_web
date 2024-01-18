@@ -28,9 +28,17 @@ app.wsgi_app = ProxyFix(
 def entry_page():
     return render_template('entry.htm', entry_js_url=url_for('static', filename='entry.js'))
 
+@app.route("/en")
+def entry_page_en():
+    return render_template('entry_en.htm', entry_js_url=url_for('static', filename='entry.js'))
+
 @app.route("/second")
 def second_page():
     return render_template("second.htm", second_js_url=url_for('static', filename='second.js'))
+
+@app.route("/second/en")
+def second_page_en():
+    return render_template("second_en.htm", second_js_url=url_for('static', filename='second.js'))
 
 @app.post("/upload")
 def get_uploaded_audio():
@@ -76,14 +84,18 @@ def go_harmonizing():
 @app.post("/whether_harmonize_completed")
 def whether_harmonize_completed():
     audio_id = request.json.get("audio_id")
+    lang = request.json.get("lang")
     workspace_path = LOCAL_TEMPFILE_PATH + audio_id
     assert os.path.exists(workspace_path), f"workspace_path({workspace_path}) doesn't exist!"
-    if os.path.exists(workspace_path + '/result111.mp3'):
-        is_completed = os.path.getsize(workspace_path + '/result111.mp3') != 0
-    else:
-        is_completed = False
-    second_url = url_for("second_page", audio_id=audio_id) if is_completed else ""
-    return jsonify({"status":is_completed, "second_url":second_url})
+    if not os.path.exists(workspace_path + '/result111.mp3'):
+        return jsonify({"status":False, "second_url":""})
+    if os.path.getsize(workspace_path + '/result111.mp3') == 0:
+        return jsonify({"status":False, "second_url":""})
+    
+    if lang == "en":
+        return jsonify({"status":True, "second_url":url_for("second_page_en", audio_id=audio_id)})
+    
+    return jsonify({"status":True, "second_url":url_for("second_page", audio_id=audio_id)})
 
 def generate_mix_audio_name(would_be_combined):
     name = "result"

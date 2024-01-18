@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Reharmonizer</title>
+<script src="{{second_js_url}}"></script>
+</head>
+<body lang="en">
+
+<h1>Reharmon!zer</h1>
+<p>The audio has been processed. You can preview and download the results, or reharmonize it again.</p>
+<div>
+    <p>Preview: </p>
+    <input type="checkbox" id="original_audio_checkbox" checked>
+    <label for="original_audio">Original Audio</label>
+    <input type="checkbox" id="melody_audio_checkbox" checked>
+    <label for="melody">Melody</label>
+    <input type="checkbox" id="harmony_audio_checkbox" checked>
+    <label for="harmony">Harmony</label>
+    <input type="button" id="get_mixed_audio_btn" value="Generate">
+    <br>
+    <audio id="mixed_audio_ctrlr" controls></audio>
+    <p id="audio_waiting_hint" hidden>waiting audio...</p>
+    <a id="dl_mixed_audio_link" href="" download="mixed_audio.wav">
+        <button id="dl_mixed_audio_btn">Download Audio</button>
+    </a>
+</div>
+<div>
+    <a id="melody_midi_dl_link" download="melody.mid">
+        <button id="melody_midi_dlbtn">Download Melody MIDI</button>
+    </a>
+    <a id="harmony_midi_dl_link" download="harmony.mid">
+        <button id="harmony_midi_dlbtn">Download Harmony MIDI</button>
+    </a>
+</div>
+<div>
+    <p>Chords:</p>
+    <div id="chord_list_div" style="height: 200px;width: 200px;overflow-y: scroll;">
+        <p id="chord_list"></p>
+    </div>
+</div>
+<div>
+    <button id="harmonization_arg_inputs_switch" onclick="show_hide_arg_form();">Show Args</button>
+    <button id="regenerate_harmony">Re-generate Harmony</button>
+    <p id="regenerate_hint" hidden>Regenerating...</p>
+
+    <form id="harmonization_arg_inputs_form" onreset="refresh_arg_value_display()" hidden>
+        <label for="arg_octave">Octave: </label>
+        <input type="range" id="arg_octave" name="arg_octave"
+                oninput="display_value_of_range('arg_octave')" min="1" max="7" step="1" value="4">
+        <label for="arg_octave" id="arg_octave_val">4</label>
+
+        <fieldset>
+            <legend>Chord Tendency</legend>
+            <label for="arg_chord_trend_maj">Major Chord: </label>
+            <input type="range"  id="arg_chord_trend_maj" name="arg_chord_trend_maj"
+                oninput="display_value_of_range('arg_chord_trend_maj')" min="0" max="2" step="0.01" value="1.5">
+            <label for="arg_chord_trend_maj" id="arg_chord_trend_maj_val">1.5</label>
+            <br>
+
+            <label for="arg_chord_trend_min">Minor Chord: </label>
+            <input type="range" id="arg_chord_trend_min" name="arg_chord_trend_min"
+                oninput="display_value_of_range('arg_chord_trend_min')" min="0" max="2" step="0.01" value="1.25">
+            <label for="arg_chord_trend_min" id="arg_chord_trend_min_val">1.25</label>
+            <br>
+
+            <label for="arg_chord_trend_dom">Dominant Seventh: </label>
+            <input type="range" id="arg_chord_trend_dom" name="arg_chord_trend_dom"
+                oninput="display_value_of_range('arg_chord_trend_dom')" min="0" max="2" step="0.01" value="1">
+            <label for="arg_chord_trend_dom" id="arg_chord_trend_dom_val">1</label>
+            <br>
+
+            <label for="arg_chord_trend_domsus4">Dominant Sus4:</label>
+            <input type="range" id="arg_chord_trend_domsus4" name="arg_chord_trend_domsus4"
+                oninput="display_value_of_range('arg_chord_trend_domsus4')" min="0" max="2" step="0.01" value="1">
+            <label for="arg_chord_trend_domsus4" id="arg_chord_trend_domsus4_val">1</label>
+            <br>
+
+            <label for="arg_chord_trend_dim">Diminished Seventh: </label>
+            <input type="range" id="arg_chord_trend_dim" name="arg_chord_trend_dim"
+                oninput="display_value_of_range('arg_chord_trend_dim')" min="0" max="2" step="0.01" value="0.75">
+            <label for="arg_chord_trend_dim" id="arg_chord_trend_dim_val">0.75</label>
+            <br>
+
+            <label for="arg_chord_trend_hdim">Half-Diminished Seventh: </label>
+            <input type="range" id="arg_chord_trend_hdim" name="arg_chord_trend_hdim"
+                oninput="display_value_of_range('arg_chord_trend_hdim')" min="0" max="2" step="0.01" value="0.75">
+            <label for="arg_chord_trend_hdim" id="arg_chord_trend_hdim_val">0.75</label>
+            <br>
+
+            <label for="arg_chord_trend_mM">Minor Major Seventh: </label>
+            <input type="range" id="arg_chord_trend_mM" name="arg_chord_trend_mM"
+                oninput="display_value_of_range('arg_chord_trend_mM')" min="0" max="2" step="0.01" value="0.75">
+            <label for="arg_chord_trend_mM" id="arg_chord_trend_mM_val">0.75</label>
+            <br>
+
+            <label for="arg_chord_trend_aug+7">Augmented Major Seventh: </label>
+            <input type="range" id="arg_chord_trend_aug+7" name="arg_chord_trend_aug+7"
+                oninput="display_value_of_range('arg_chord_trend_aug+7')" min="0" max="2" step="0.01" value="0.75">
+            <label for="arg_chord_trend_aug+7" id="arg_chord_trend_aug+7_val">0.75</label>
+            <br>
+
+            <label for="arg_chord_trend_aug7">Augmented Seventh</label>
+            <input type="range" id="arg_chord_trend_aug7" name="arg_chord_trend_aug7"
+                oninput="display_value_of_range('arg_chord_trend_aug7')" min="0" max="2" step="0.01" value="0.75">
+            <label for="arg_chord_trend_aug7" id="arg_chord_trend_aug7_val">0.75</label>
+        </fieldset>
+        <label for="arg_selection_range">Randomness: </label>
+        <input type="range" id="arg_selection_range" name="arg_selection_range"
+                oninput="display_value_of_range('arg_selection_range')" min="1" max="20" step="1" value="5">
+        <label for="arg_selection_range" id="arg_selection_range_val">5</label>
+        <br>
+
+        <label for="arg_antidirection">Opposite Direction Tendency: </label>
+        <input type="range" id="arg_antidirection" name="arg_antidirection"
+                oninput="display_value_of_range('arg_antidirection')" min="0" max="5" step="0.1" value="2">
+        <label for="arg_antidirection" id="arg_antidirection_val">2</label>
+        <br>
+
+        <label for="arg_fifth_circle">Fifth Circle Tendency: </label>
+        <input type="range" id="arg_fifth_circle" name="arg_fifth_circle"
+                oninput="display_value_of_range('arg_fifth_circle')" min="0" max="4" step="1" value="2">
+        <label for="arg_fifth_circle" id="arg_fifth_circle_val">2</label>
+        <br>
+
+        <label for="arg_voicing_openclose">Open/Close Voicing Stability: </label>
+        <input type="range" id="arg_voicing_openclose" name="arg_voicing_openclose"
+                oninput="display_value_of_range('arg_voicing_openclose')" min="0" max="4" step="1" value="2">
+        <label for="arg_voicing_openclose" id="arg_voicing_openclose_val">2</label>
+        <br>
+
+        <label for="arg_split_time">Blank Duration for Chord Change Threshold: </label>
+        <input type="range" id="arg_split_time" name="arg_split_time"
+                oninput="display_value_of_range('arg_split_time', 's')" min="0" max="1" step="0.01" value="0.2">
+        <label for="arg_split_time" id="arg_split_time_val">2s</label>
+        <br>
+
+        <label for="arg_sustain_time">Maximum Chord Duration: </label>
+        <input type="range" id="arg_sustain_time" name="arg_sustain_time"
+                oninput="display_value_of_range('arg_sustain_time', 's')" min="0" max="10" step="0.01" value="2.4">
+        <label for="arg_sustain_time" id="arg_sustain_time_val">2s</label>
+        <br>
+
+        <label for="arg_midi_velocity">Harmony Part Notes Velocity: </label>
+        <input type="range" id="arg_midi_velocity" name="arg_midi_velocity"
+                oninput="display_value_of_range('arg_midi_velocity')" min="1" max="127" step="1" value="100">
+        <label for="arg_midi_velocity" id="arg_midi_velocity_val">100</label>
+        <br>
+        <input type="reset">
+    </form>
+</div>
+<div>
+    <button id="back_last_page_btn">Last Page</button>
+</div>
+
+
+</body>
+</html> 
