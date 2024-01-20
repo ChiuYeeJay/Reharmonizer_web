@@ -1,0 +1,38 @@
+body{
+    background-color: rgb(20, 20, 20);
+}
+
+#header_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 25%;
+}
+
+/* #header_container > *{
+    background-color: azure;
+} */
+
+#main_title{
+    color: rgb(237, 228, 43);
+    font-size: 40pt;
+    margin: 0%;
+}
+
+#middle_content{
+    width: 60%;
+    background-color: rgb(50, 50, 50);
+    padding: 5%;
+    margin: 5%;
+}
+
+a{
+    color: rgb(205, 233, 122);
+    font-size: 20pt;
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+p,input,label{
+    color: rgb(180, 180, 180);
+}
+
