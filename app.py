@@ -35,7 +35,12 @@ def entry_page():
 
 @app.route("/en")
 def entry_page_en():
-    return render_template('entry_en.htm', entry_js_url=url_for('static', filename='entry.js'))
+    return render_template('entry_en.htm',
+                           entry_js=url_for('static', filename='entry.js'),
+                           entry_css=url_for('static', filename="entry.css"),
+                           upload_svg=url_for('static', filename='upload.svg'),
+                           audio_svg=url_for('static', filename='audio.svg'),
+                           arrowright_svg=url_for('static', filename='arrow-right.svg'))
 
 @app.route("/second")
 def second_page():

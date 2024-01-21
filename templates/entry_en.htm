@@ -1,24 +1,80 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Reharmonizer</title>
-<script src="{{entry_js_url}}"></script>
+    <title>Reharmonizer</title>
+    <script src="{{entry_js}}"></script>
+    <link rel="stylesheet" href="{{entry_css}}">
 </head>
+
 <body lang="en">
-
-<h1>Reharmon!zer</h1>
-<div>
-    <p>You can upload any random audio, the system will generate piano melody and chords for it!</p>
-    <p>(The maximum length of audio file is three minuites.)</p>
-</div>
-<form id="audio_form" method="post" action="/upload" enctype="multipart/form-data">
-    <label for="audio_upload">Upload an audio file:</label>
-    <input name="original_audio" id="audio_upload" type="file" accept="audio/*"
-           formenctype="multipart/form-data" oninput="on_audio_chosen();return true;" required>
-    <input id="submit_btn" type="button" value="upload" onclick="submit_audio();return true;" disabled>
-</form>
-<p id="upload_status"></p>
-
-<a href="/">Chinese</a>
+    <div id="header_container">
+        <div style="padding: 10px; margin: 10px;">
+            <h1 id="main_title">Reharmon!zer</h1>
+        </div>
+        <div id="header_empty" style="flex-grow: 1;"></div>
+        <div style="padding: 10px; margin: 10px;">
+            <a href="https://github.com/ChiuYeeJay/Reharmonizer_web" id="github_link" target="_blank">Github</a>
+        </div>
+        <div style="padding: 10px; margin: 10px;">
+            <a href="/" id="lang_link" target="_self">Chinese</a>
+        </div>
+    </div>
+    <div id="main_container">
+        <div id="left_blank" style="flex-grow: 1;"></div>
+        <div id="middle_content">
+            <div>
+                <h2 style="margin-top: 0%;">Transform ANY audio into piano melody and chords!</h2>
+            </div>
+            <div id="description">
+                <p>You can upload any random audio, the system will generate piano melody and chords for it!</p>
+                <p>(The maximum length of audio file is three minuites.)</p>
+            </div>
+            <div id="audio_form_parent">
+                <form id="audio_form" method="post" action="/upload" enctype="multipart/form-data">
+                    <div id="drag_and_drop" ondrop="drop_handler(event);" ondragover="dragover_handler(event);" ondragleave="dragleave_handler(event);">
+                        <label for="audio_upload" style="align-self: center;">
+                            <img id="upload_icon" src="{{upload_svg}}" style="width:15vh; height:15vh;">
+                        </label>
+                        <label for="audio_upload" style="align-self: center;">upload audio</label>
+                        <input name="original_audio" id="audio_upload" type="file" accept="audio/*" formenctype="multipart/form-data"
+                        oninput="on_audio_chosen();return true;" required style="display: none;" >
+                    </div>
+                </form>
+            </div>
+            <div id="after_uplaod" style="display: none; flex-direction: column; align-items: center; flex-grow: 1;">
+                <img id="audio_icon" src="{{audio_svg}}" style="width:15vh; height:15vh;">
+                <p id="uplaoded_audio_name">sound.wav</p>
+            </div>
+            <div id="prcessing_progress" width="100%" style="flex-grow: 1;">
+                <div id="progress_0">
+                    <span class="progress_span"></span>
+                    <p style="color: white;">uploading</p>
+                    <span class="progress_span"></span>
+                </div>
+                <img src="{{arrowright_svg}}">
+                <div id="progress_1">
+                    <span class="progress_span"></span>
+                    <p style="color: white;">processing</p>
+                    <span class="progress_span"></span>
+                </div>
+                <img src="{{arrowright_svg}}">
+                <div id="progress_2">
+                    <span class="progress_span"></span>
+                    <p style="color: white;">harmonizing</p>
+                    <span class="progress_span"></span>
+                </div>
+                <img src="{{arrowright_svg}}">
+                <div id="progress_3">
+                    <span class="progress_span"></span>
+                    <p style="color: white;">finished!</p>
+                    <span class="progress_span"></span>
+                </div>
+            </div>
+            <p id="upload_status"></p>
+        </div>
+        <div id="right_blank" style="flex-grow: 1;"></div>
+    </div>
 </body>
-</html> 
+
+</html>
