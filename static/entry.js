@@ -3,6 +3,7 @@
 var audio_id = "";
 var audio2midi_asking_interval = 2000;
 var harmonize_asking_interval = 1000;
+var final_progress_stage = 3;
 var accepted_file_extension = ["wav", "mp3", "m4a", "flac", "mp4", "wma", "aac"];
 
 function post_sender(action, data, handler, content_type="", response_type=""){
@@ -29,8 +30,12 @@ function set_processing_progress(stage){
         document.getElementById("progress_"+i).style.backgroundColor = "rgba(131, 233, 122, 0.3)";
         document.getElementById("progress_"+i).style.animation = "";
     }
-    document.getElementById("progress_"+stage).style.backgroundColor = "rgba(131, 233, 122, 0.3)";
-    document.getElementById("progress_"+stage).style.animation = "progress_breath 1s infinite alternate linear"
+    if(stage < final_progress_stage){
+        document.getElementById("progress_"+stage).style.animation = "progress_breath 1s infinite alternate linear"
+    }
+    else{
+        document.getElementById("progress_"+stage).style.backgroundColor = "rgba(131, 233, 122, 0.3)";
+    }
 }
 
 function ask_whether_harmonize_completed(){
@@ -78,6 +83,7 @@ function submit_suceeded(xhttp_request){
 function submit_audio(file){
     document.getElementById("audio_form").style.display = "none";
     document.getElementById("after_uplaod").style.display = "flex"
+    document.getElementById("uplaoded_audio_name").innerText = file.name;
     set_processing_progress(0);
 
     let formdata = new FormData();
@@ -142,10 +148,4 @@ function dragover_handler(event){
 
 function dragleave_handler(event){
     document.getElementById("drag_and_drop").style.backgroundColor = "transparent";
-}
-
-window.onload = ()=>{
-    document.body.width = window.innerWidth;
-    document.body.style.height = window.innerHeight;
-    console.log(window.innerHeight);
 }
