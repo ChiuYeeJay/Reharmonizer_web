@@ -4,7 +4,12 @@ var audio_id = "";
 var audio2midi_asking_interval = 2000;
 var harmonize_asking_interval = 1000;
 var final_progress_stage = 3;
-var accepted_file_extension = ["wav", "mp3", "m4a", "flac", "mp4", "wma", "aac"];
+
+var accepted_file_extension = ["3gp", "aa", "aac", "aax", "act", "aiff", "alac", "amr",
+                               "ape", "au", "awb", "dss", "dvf", "flac", "gsm", "iklax",
+                               "ivs", "m4a", "m4b", "m4p", "mmf", "movpkg", "mp3", "mpc",
+                               "msv", "nmf", "ogg", "oga", "mogg", "opus", "ra", "rm", "raw",
+                               "rf64", "sln", "tta", "voc", "vox", "wav", "wma", "wv", "webm", "8svx", "cda"];
 
 function post_sender(action, data, handler, content_type="", response_type=""){
     let xhttp_request = new XMLHttpRequest();
