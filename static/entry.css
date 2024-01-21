@@ -1,12 +1,15 @@
 body{
     background-color: rgb(20, 20, 20);
+    height: 100vh;
+    margin: 0%;
 }
 
 #header_container{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    height: 25%;
+    flex-wrap: wrap;
+    height: 20%;
 }
 
 /* #header_container > *{
@@ -19,11 +22,80 @@ body{
     margin: 0%;
 }
 
+#main_container{
+    display: flex;
+    height: 70%;
+}
+
 #middle_content{
+    display: flex;
+    flex-direction: column;
     width: 60%;
     background-color: rgb(50, 50, 50);
     padding: 5%;
-    margin: 5%;
+}
+
+#audio_form_parent{
+    flex-grow: 1;
+}
+
+#audio_form{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #fff; */
+}
+
+#upload_icon{
+    transition: 0.1s;
+}
+
+#upload_icon:hover{
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+#drag_and_drop{
+    height: 100%;
+    width: 95%;
+    border: 10px skyblue dashed;
+    border-radius: 30px;
+    padding: 5px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: transparent;
+    transition: 0.1s;
+}
+
+#prcessing_progress{
+    margin: 5px;
+    display: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+#prcessing_progress > div{
+    display: flex;
+    flex-grow: 1;
+    padding: 0.2%;
+    /* background-color: aliceblue; */
+    border: solid #ababab;
+    border-radius: 20px;
+}
+
+.progress_span{
+    flex-grow: 1;
+}
+
+@keyframes progress_breath{
+    from {background-color: rgba(255, 208, 0, 0.3);}
+    to {background-color: rgba(255, 208, 0, 0.85);}
 }
 
 a{
@@ -32,7 +104,6 @@ a{
     background-color: rgba(255, 255, 255, 0.25);
 }
 
-p,input,label{
+p,input,label,h2{
     color: rgb(180, 180, 180);
 }
-

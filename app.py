@@ -26,7 +26,12 @@ app.wsgi_app = ProxyFix(
 
 @app.route("/")
 def entry_page():
-    return render_template('entry.htm', entry_js_url=url_for('static', filename='entry.js'))
+    return render_template('entry.htm', 
+                           entry_js=url_for('static', filename='entry.js'),
+                           entry_css=url_for('static', filename="entry.css"),
+                           upload_svg=url_for('static', filename='upload.svg'),
+                           audio_svg=url_for('static', filename='audio.svg'),
+                           arrowright_svg=url_for('static', filename='arrow-right.svg'))
 
 @app.route("/en")
 def entry_page_en():

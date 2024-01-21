@@ -3,6 +3,7 @@
 var audio_id = "";
 var audio2midi_asking_interval = 2000;
 var harmonize_asking_interval = 1000;
+var accepted_file_extension = ["wav", "mp3", "m4a", "flac", "mp4", "wma", "aac"];
 
 function post_sender(action, data, handler, content_type="", response_type=""){
     let xhttp_request = new XMLHttpRequest();
@@ -22,10 +23,20 @@ function post_sender(action, data, handler, content_type="", response_type=""){
     xhttp_request.send(data);
 }
 
+function set_processing_progress(stage){
+    document.getElementById("prcessing_progress").style.display = "flex";
+    for(let i=0;i<stage;i++){
+        document.getElementById("progress_"+i).style.backgroundColor = "rgba(131, 233, 122, 0.3)";
+        document.getElementById("progress_"+i).style.animation = "";
+    }
+    document.getElementById("progress_"+stage).style.backgroundColor = "rgba(131, 233, 122, 0.3)";
+    document.getElementById("progress_"+stage).style.animation = "progress_breath 1s infinite alternate linear"
+}
+
 function ask_whether_harmonize_completed(){
     post_sender("/whether_harmonize_completed", JSON.stringify({"audio_id":audio_id, "lang":document.body.lang}), (xhttp_request)=>{
         if(xhttp_request.response.status){
-            document.getElementById("upload_status").innerText = "redirect...";
+            set_processing_progress(3);
             window.location.assign(xhttp_request.response.second_url);
         }
         else{
@@ -43,7 +54,7 @@ function start_harmonization(){
 function ask_whether_audio2midi_completed(){
     post_sender("/whether_audio2midi_completed", JSON.stringify({"audio_id":audio_id}), (xhttp_request)=>{
         if(xhttp_request.response.status){
-            document.getElementById("upload_status").innerText = "harmonizing...";
+            set_processing_progress(2);
             start_harmonization();
         }
         else{
@@ -60,33 +71,81 @@ function start_audio2midi(){
 function submit_suceeded(xhttp_request){
     audio_id = xhttp_request.response.audio_id;
     console.log("audio_id: " + audio_id);
-    document.getElementById("upload_status").innerText = "processing audio...";
+    set_processing_progress(1);
     start_audio2midi();
 }
 
-function submit_audio(){
-    let form_element = document.getElementById("audio_form");
-    form_element.hidden = true;
-    document.getElementById("upload_status").innerText = "uploading audio...";
-    
-    post_sender(form_element.action, new FormData(form_element), submit_suceeded, "", "json");
+function submit_audio(file){
+    document.getElementById("audio_form").style.display = "none";
+    document.getElementById("after_uplaod").style.display = "flex"
+    set_processing_progress(0);
+
+    let formdata = new FormData();
+    formdata.append("original_audio", file);
+    post_sender("/upload", formdata, submit_suceeded, "", "json");            
+    // post_sender(form_element.action, new FormData(form_element), submit_suceeded, "", "json");
 }
 
-function on_audio_chosen(){
-    let submit_btn_element = document.getElementById("submit_btn");
-    let fileinput_element = document.getElementById("audio_upload");
-    if(fileinput_element.value == "") return;
-    submit_btn_element.disabled = true;
-    let url = URL.createObjectURL(fileinput_element.files[0]);
+function check_audio(file){
+    let url = URL.createObjectURL(file);
     let audio = new Audio(url);
     audio.oncanplaythrough = ()=>{
         // console.log(audio.duration);
         if(audio.duration > 180){
             alert("audio length too long, it must be less then 180s");
-            return;
         }
-        document.getElementById("submit_btn").disabled = false;
+        else{
+            submit_audio(file);
+        }
     }
 }
 
-window.onload = on_audio_chosen;
+function on_audio_chosen(){
+    let fileinput_element = document.getElementById("audio_upload");
+    if(fileinput_element.value == "") return;
+    check_audio(fileinput_element.files[0]);
+}
+
+function drop_handler(event){
+    event.preventDefault();
+    document.getElementById("drag_and_drop").style.backgroundColor = "transparent";
+    let file;
+    if (event.dataTransfer.items) {
+        let item = event.dataTransfer.items[0];
+        if(item.kind === "file"){
+            file = item.getAsFile();
+        }
+    } else {
+        file = event.dataTransfer.files[0];
+    }
+    // console.log(file);
+
+    let fileExt = file.name.split('.').pop().toLowerCase();
+    let flag = false;
+    for(let i=0;i<accepted_file_extension.length;i++){
+        if(fileExt === accepted_file_extension[i]){
+            flag = true;
+        }
+    }
+    if(!flag){
+        alert("format not accepted. (accepted: wav, mp3, m4a, flac, mp4, wma, aac)");
+        return;
+    }
+    
+    check_audio(file);
+}
+
+function dragover_handler(event){
+    event.preventDefault();
+    document.getElementById("drag_and_drop").style.backgroundColor = "rgba(255,255,255,0.1)";
+}
+
+function dragleave_handler(event){
+    document.getElementById("drag_and_drop").style.backgroundColor = "transparent";
+}
+
+window.onload = ()=>{
+    document.body.width = window.innerWidth;
+    document.body.style.height = window.innerHeight;
+    console.log(window.innerHeight);
+}
