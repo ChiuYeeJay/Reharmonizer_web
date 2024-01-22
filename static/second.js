@@ -32,6 +32,13 @@ function start(xhttp_request){
     request_midi_dowload_link();
     request_chords();
     refresh_arg_value_display();
+
+    if(document.body.lang == "zh-tw"){
+        document.getElementById("lang_link").href = "/second/en?audio_id=" + audio_id;
+    }
+    else{
+        document.getElementById("lang_link").href = "/second?audio_id=" + audio_id;       
+    }
 }
 
 function post_sender(action, data, handler, content_type="", response_type=""){
@@ -78,11 +85,12 @@ function ask_whether_mix_audio_completed(last_mtime, would_be_combined){
 }
 
 function get_mixed_audio_btn_clicked(){
-    document.getElementById("audio_waiting_hint").hidden = false;
-    document.getElementById("mixed_audio_ctrlr").hidden = true;
     if(!(checkbox_status[0] || checkbox_status[1] || checkbox_status[2])){
         alert("Check at least one, or it would be silent!");
+        return;
     }
+    document.getElementById("audio_waiting_hint").hidden = false;
+    document.getElementById("mixed_audio_ctrlr").hidden = true;
     let data = JSON.stringify({"would_be_combined":checkbox_status, "audio_id":audio_id});
     post_sender("/second/mix_audio", data, (xhttp_request)=>{
         ask_whether_mix_audio_completed(xhttp_request.response.last_mtime, checkbox_status);
