@@ -23,58 +23,78 @@
     </div>
 
     <div id="main_container">
-        <div id="left_blank" style="flex-grow: 1;"></div>
-        <div id="middle_content">
-            <p>音檔已經處理完成，你可以預覽、下載這邊的東東，或是選擇重新配和聲</p>
+        <p id="description" style="margin: 0%;">音檔已經處理完成，你可以預覽、下載這邊的東東，或是選擇重新配和聲</p>
+        <div id="audio_preview_zone" style="width: 45%; border: 2px solid white;">
+            <p>音檔預覽：</p>
+            <img src="../static/music-notes.svg" style="width: 10vw; height: 10svw;">
+            <audio id="mixed_audio_ctrlr" controls></audio>
+            <br>
+            <button id="original_audio_checkbox" class="customed_checkbox" onclick="checkbox_clicked(event, 0);">
+                <img src="../static/check.svg" class="check_icon">
+                <img src="../static/minus.svg" class="minus_icon" hidden>
+                <label class="checkbox_label">原音檔</label>
+            </button>
+            <button id="melody_audio_checkbox" class="customed_checkbox" onclick="checkbox_clicked(event, 1);">
+                <img src="../static/check.svg" class="check_icon">
+                <img src="../static/minus.svg" class="minus_icon" hidden>
+                <label class="checkbox_label">旋律</label>
+            </button>
+            <button id="harmony_audio_checkbox" class="customed_checkbox" onclick="checkbox_clicked(event, 2);">
+                <img src="../static/check.svg" class="check_icon">
+                <img src="../static/minus.svg" class="minus_icon" hidden>
+                <label class="checkbox_label">和聲</label>
+            </button>
+            <button id="get_mixed_audio_btn">
+                <img src="../static/lightning.svg" class="check_icon">
+                <label>生成</label>
+            </button>
+            <p id="audio_waiting_hint" hidden>waiting audio...</p>
         </div>
-        <div id="right_blank" style="flex-grow: 1;"></div>
+
+        <div id="download_file_zone" style="width: 45%;">
+            <a id="dl_mixed_audio_link" download="mixed_audio.wav">
+                <button id="dl_mixed_audio_btn" class="download_button">
+                    <img src="../static/download.svg">
+                    <label>下載音檔</label>
+                </button>
+            </a>
+            <a id="melody_midi_dl_link" download="melody.mid">
+                <button id="melody_midi_dlbtn" class="download_button">
+                    <img src="../static/download.svg">
+                    <label>下載旋律midi</label>
+                </button>
+            </a>
+            <a id="harmony_midi_dl_link" download="harmony.mid">
+                <button id="harmony_midi_dlbtn" class="download_button">
+                    <img src="../static/download.svg">
+                    <label>下載和聲midi</label>
+                </button>
+            </a>
+        </div>
+
+        <div id="chord_list_zone" style="width: 45%; position: absolute; right: 0; border: white solid 2px;">
+            <p>和弦表</p>
+            <div id="chord_list_div" style="height: 200px;width: 200px;overflow-y: scroll;">
+                <p id="chord_list">
+                    F#dim7 (9) <br>
+                    Baug+7 (9) <br>
+                    Gmaj7 (9,#11) <br>
+                    E7 (13) <br>
+                    Aaug+7 (9) <br>
+                    A#maj7 (9) <br>
+                    Cmaj7 (9) <br>
+                    Fø7 (9) <br>
+                    A#dim7 (9) <br>
+                    Amaj7 (9) <br>
+                    Gmaj7 (13) <br>
+                    C#maj7 (9) <br>
+                    F#aug7 (13) <br>
+                    D#7 (11)
+                </p>
+            </div>
+        </div>
     </div>
 
-    <div>
-        <p>音檔預覽：</p>
-        <input type="checkbox" id="original_audio_checkbox" checked>
-        <label for="original_audio">原音檔</label>
-        <input type="checkbox" id="melody_audio_checkbox" checked>
-        <label for="melody">旋律</label>
-        <input type="checkbox" id="harmony_audio_checkbox" checked>
-        <label for="harmony">和聲</label>
-        <input type="button" id="get_mixed_audio_btn" value="生成">
-        <br>
-        <audio id="mixed_audio_ctrlr" controls></audio>
-        <p id="audio_waiting_hint" hidden>waiting audio...</p>
-        <a id="dl_mixed_audio_link" href="" download="mixed_audio.wav">
-            <button id="dl_mixed_audio_btn">下載音檔</button>
-        </a>
-    </div>
-    <div>
-        <a id="melody_midi_dl_link" download="melody.mid">
-            <button id="melody_midi_dlbtn">下載旋律midi</button>
-        </a>
-        <a id="harmony_midi_dl_link" download="harmony.mid">
-            <button id="harmony_midi_dlbtn">下載和聲midi</button>
-        </a>
-    </div>
-    <div>
-        <p>和弦表</p>
-        <div id="chord_list_div" style="height: 200px;width: 200px;overflow-y: scroll;">
-            <p id="chord_list">
-                F#dim7 (9) <br>
-                Baug+7 (9) <br>
-                Gmaj7 (9,#11) <br>
-                E7 (13) <br>
-                Aaug+7 (9) <br>
-                A#maj7 (9) <br>
-                Cmaj7 (9) <br>
-                Fø7 (9) <br>
-                A#dim7 (9) <br>
-                Amaj7 (9) <br>
-                Gmaj7 (13) <br>
-                C#maj7 (9) <br>
-                F#aug7 (13) <br>
-                D#7 (11)
-            </p>
-        </div>
-    </div>
     <div>
         <button id="harmonization_arg_inputs_switch" onclick="show_hide_arg_form();">顯示調整參數</button>
         <button id="regenerate_harmony">重新生成和聲</button>

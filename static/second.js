@@ -3,6 +3,8 @@
 var audio_id = "";
 var hamonize_again_asking_interval = 1000;
 var mix_audio_asking_interval = 1000;
+var checkbox_status = [true, true, true];
+var checkbox_num_to_id = ["original_audio_checkbox", "melody_audio_checkbox", "harmony_audio_checkbox"];
 
 function get_and_validate_audio_id(){
     let url_param = new URLSearchParams(window.location.search);
@@ -78,17 +80,28 @@ function ask_whether_mix_audio_completed(last_mtime, would_be_combined){
 function get_mixed_audio_btn_clicked(){
     document.getElementById("audio_waiting_hint").hidden = false;
     document.getElementById("mixed_audio_ctrlr").hidden = true;
-    let original_checked = document.getElementById("original_audio_checkbox").checked;
-    let melody_checked = document.getElementById("melody_audio_checkbox").checked;
-    let harmony_checked = document.getElementById("harmony_audio_checkbox").checked;
-    let would_be_combined = [original_checked, melody_checked, harmony_checked];
-    if(!(original_checked || melody_checked || harmony_checked)){
+    if(!(checkbox_status[0] || checkbox_status[1] || checkbox_status[2])){
         alert("Check at least one, or it would be silent!");
     }
-    let data = JSON.stringify({"would_be_combined":would_be_combined, "audio_id":audio_id});
+    let data = JSON.stringify({"would_be_combined":checkbox_status, "audio_id":audio_id});
     post_sender("/second/mix_audio", data, (xhttp_request)=>{
-        ask_whether_mix_audio_completed(xhttp_request.response.last_mtime, would_be_combined);
+        ask_whether_mix_audio_completed(xhttp_request.response.last_mtime, checkbox_status);
     }, "application/json", "json");
+}
+
+function checkbox_clicked(ev,num){
+    let target = document.getElementById(checkbox_num_to_id[num]);
+    checkbox_status[num] = !checkbox_status[num];
+    if(checkbox_status[num]){
+        target.style.backgroundColor = "rgba(0, 153, 3, 0.855)";
+        target.children[0].hidden = false;
+        target.children[1].hidden = true;
+    }
+    else{
+        target.style.backgroundColor = "transparent";
+        target.children[0].hidden = true;
+        target.children[1].hidden = false;
+    }
 }
 
 function request_midi_dowload_link(){
@@ -212,4 +225,4 @@ function collect_args(){
     return args;
 }
 
-// window.onload = get_and_validate_audio_id;
+window.onload = get_and_validate_audio_id;

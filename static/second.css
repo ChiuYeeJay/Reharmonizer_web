@@ -20,74 +20,84 @@ body{
 }
 
 #main_container{
-    display: flex;
-    height: 70%;
-}
-
-#middle_content{
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 60%;
+    height: 70%;
+    left: 15%;
     background-color: rgb(50, 50, 50);
     padding: 5%;
 }
 
-#audio_form_parent{
-    flex-grow: 1;
+.customed_checkbox{
+    height: 40px;
+    width: 25%;
+    background-color: rgba(0, 153, 3, 0.855);
+    border: solid rgba(255, 255, 255, 0.75) 2px;
+    border-radius: 10px;
+    transition: 0.2s;
+    font-size: auto;
+    color: white;
 }
 
-#audio_form{
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /* background-color: #fff; */
+.customed_checkbox:hover{
+    border-color: rgba(255, 255, 255, 1);
 }
 
-#upload_icon{
-    transition: 0.1s;
+.check_icon{
+    width: 24px;
+    height: 24px;
 }
 
-#upload_icon:hover{
-    background-color: rgba(255, 255, 255, 0.25);
+.minus_icon{
+    width: 24px;
+    height: 24px;
 }
 
-#drag_and_drop{
-    height: 100%;
-    width: 95%;
-    border: 10px skyblue dashed;
-    border-radius: 30px;
-    padding: 5px;
-    margin: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+.checkbox_icon{
+    width: 30%;
+    color: white;
+}
+
+#get_mixed_audio_btn{
+    width: 20%;
+    height: 40px;
+    /* background-color: rgb(189, 123, 0); */
     background-color: transparent;
+    border: solid rgba(255, 255, 255, 0.75) 2px;
+    border-radius: 10px;
+    transition: 0.2s;
+    font-size: auto;
+    color: white;
     transition: 0.1s;
 }
 
-#prcessing_progress{
-    margin: 5px;
-    display: none;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
+#get_mixed_audio_btn:hover{
+    color: rgba(255, 255, 255, 1);
+    background-color: rgb(255, 149, 0);
 }
 
-#prcessing_progress > div{
-    display: flex;
-    flex-grow: 1;
-    padding: 0.2%;
-    /* background-color: aliceblue; */
-    border: solid #ababab;
-    border-radius: 20px;
+#get_mixed_audio_btn:active{
+    background-color: rgba(255, 217, 0, 0.935);
 }
 
-.progress_span{
-    flex-grow: 1;
+.download_button{
+    background-color: transparent;
+    border: solid rgba(255, 255, 255, 0.75) 2px;
+    border-radius: 10px;
+    transition: 0.2s;
+    font-size: auto;
+    color: white;
+    transition: 0.05s;
+}
+
+.download_button:hover{
+    background-color: rgb(0, 159, 251);
+}
+
+.download_button:active{
+    background-color: rgb(0, 108, 179);
 }
 
 @keyframes progress_breath{
@@ -95,12 +105,12 @@ body{
     to {background-color: rgba(255, 208, 0, 0.85);}
 }
 
-a{
+#github_link, #lang_link{
     color: rgb(205, 233, 122);
     font-size: 20pt;
     background-color: rgba(255, 255, 255, 0.25);
 }
 
-p,input,label,h2{
+p,input,h2{
     color: rgb(180, 180, 180);
 }
