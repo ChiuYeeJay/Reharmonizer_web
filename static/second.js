@@ -212,4 +212,4 @@ function collect_args(){
     return args;
 }
 
-window.onload = get_and_validate_audio_id;
+// window.onload = get_and_validate_audio_id;
