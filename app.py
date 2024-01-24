@@ -61,7 +61,20 @@ def second_page():
 
 @app.route("/second/en")
 def second_page_en():
-    return render_template("second_en.htm", second_js_url=url_for('static', filename='second.js'))
+    return render_template("second_en.htm",
+                           second_js=url_for('static', filename='second.js'),
+                           second_css=url_for('static', filename='second.css'),
+                           music_notes_svg=url_for('static', filename='music-notes.svg'),
+                           check_svg=url_for('static', filename='check.svg'),
+                           minus_svg=url_for('static', filename='minus.svg'),
+                           lightning_svg=url_for('static', filename='lightning.svg'),
+                           download_svg=url_for('static', filename='download.svg'),
+                           circle_arrow_left_svg=url_for('static', filename='circle-arrow-left.svg'),
+                           sliders_alt_svg=url_for('static', filename='sliders-alt.svg'),
+                           light_bulb_svg=url_for('static', filename='light-bulb.svg'),
+                           close_svg=url_for('static', filename='close.svg'),
+                           refresh_svg=url_for('static', filename='refresh.svg')
+                           )
 
 @app.post("/upload")
 def get_uploaded_audio():
