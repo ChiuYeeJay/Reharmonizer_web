@@ -16,8 +16,9 @@ Reharmonizer_web is a web app that allows people upload random audio, and genera
 2. Install all dependancies
 3. Run RabbitMQ server
 4. Run celery worker (you can use `celery -A celery_tasks worker --loglevel=INFO`)
-5. Run `gunicorn -b 0.0.0.0:80 app:app`
-6. Open yor browser and upload your audio
+5. Run `auto_tempfile_cleaner.py` to automatically clean storage (optional)
+6. Run `gunicorn -b 0.0.0.0:80 app:app`
+7. Open yor browser and upload your audio
 
 ## Piano Sound
 The piano sound is extracted and modified from [YDP-GrandPiano](https://freepats.zenvoid.org/Piano/acoustic-grand-piano.html) soundfont.
