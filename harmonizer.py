@@ -184,6 +184,8 @@ def random_select_from_record(record):
         rd_num -= v
         if rd_num <= 0: break
         count += 1
+    if count >= len(record):
+        count = len(record)-1
     return record[count][1], record[count][2]
 
 # %% [markdown]
