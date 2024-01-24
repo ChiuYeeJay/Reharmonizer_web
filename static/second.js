@@ -28,6 +28,7 @@ function start(xhttp_request){
     document.getElementById("get_mixed_audio_btn").addEventListener("click", get_mixed_audio_btn_clicked);
     document.getElementById("back_last_page_btn").addEventListener("click", go_back_entry);
     document.getElementById("regenerate_harmony").addEventListener("click", request_harmonizing_again);
+    document.getElementById("regenerate_harmony_on_panel").addEventListener("click", regenerate_harmony_btn_on_panel_clicked);
     get_mixed_audio_btn_clicked();
     request_midi_dowload_link();
     request_chords();
@@ -140,7 +141,7 @@ function ask_whether_harmonize_again_completed(last_mtime){
                 get_mixed_audio_btn_clicked();
                 request_midi_dowload_link();
                 request_chords();
-                document.getElementById("regenerate_hint").hidden = true;
+                document.getElementById("regenerate_hint_panel").hidden = true;
             }
             else{
                 setTimeout(()=>{ask_whether_harmonize_again_completed(last_mtime);}, hamonize_again_asking_interval);
@@ -149,7 +150,7 @@ function ask_whether_harmonize_again_completed(last_mtime){
 }
 
 function request_harmonizing_again(){
-    document.getElementById("regenerate_hint").hidden = false;
+    document.getElementById("regenerate_hint_panel").hidden = false;
     document.getElementById("audio_waiting_hint").hidden = false;
     document.getElementById("mixed_audio_ctrlr").hidden = true;
     let harmonization_args = collect_args();
@@ -177,23 +178,21 @@ function refresh_arg_value_display(){
     }
 }
 
-function show_hide_arg_form(){
-    let switch_btn = document.getElementById("harmonization_arg_inputs_switch"); 
-    let form_node = document.getElementById("harmonization_arg_inputs_form");
-    if(form_node.hidden){
-        form_node.hidden = false;
-        if(document.body.lang == "en")
-            switch_btn.innerText = "Hide Args";
-        else
-            switch_btn.innerText = "隱藏調整參數";
-    }
-    else{
-        form_node.hidden = true;
-        if(document.body.lang == "en")
-            switch_btn.innerText = "Show Args";
-        else
-            switch_btn.innerText = "顯示調整參數";
-    }
+function show_arg_panel(){
+    document.getElementById("args_panel").hidden = false;
+}
+
+function hide_arg_panel(){
+    document.getElementById("args_panel").hidden = true;
+}
+
+function reset_arg_form(){
+    document.getElementById("harmonization_arg_inputs_form").reset();
+}
+
+function regenerate_harmony_btn_on_panel_clicked(){
+    hide_arg_panel();
+    request_harmonizing_again();
 }
 
 function collect_args(){

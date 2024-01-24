@@ -10,7 +10,7 @@ body{
     flex-direction: row;
     justify-content: space-around;
     flex-wrap: wrap;
-    height: 20%;
+    height: 20vh;
 }
 
 #main_title{
@@ -20,14 +20,33 @@ body{
 }
 
 #main_container{
-    position: relative;
+    position: absolute;
     display: flex;
     flex-direction: column;
-    width: 60%;
-    height: 70%;
+    width: 60vw;
+    height: 60vh;
     left: 15%;
     background-color: rgb(50, 50, 50);
-    padding: 5%;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+
+#audio_preview_zone{
+    width: 95%;
+    height: 66%;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2%;
+    margin: 1%;
+    margin-left: 0px;
+}
+
+#music_note_img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2%;
 }
 
 .customed_checkbox{
@@ -39,6 +58,8 @@ body{
     transition: 0.2s;
     font-size: auto;
     color: white;
+    margin: 1%;
+    padding: 0;
 }
 
 .customed_checkbox:hover{
@@ -56,8 +77,8 @@ body{
 }
 
 .checkbox_icon{
-    width: 30%;
-    color: white;
+    width: 24px;
+    height: 24px;
 }
 
 #get_mixed_audio_btn{
@@ -67,14 +88,15 @@ body{
     background-color: transparent;
     border: solid rgba(255, 255, 255, 0.75) 2px;
     border-radius: 10px;
-    transition: 0.2s;
     font-size: auto;
     color: white;
     transition: 0.1s;
+    margin: 1%;
 }
 
 #get_mixed_audio_btn:hover{
     color: rgba(255, 255, 255, 1);
+    border-color: rgba(255, 255, 255, 1);
     background-color: rgb(255, 149, 0);
 }
 
@@ -82,17 +104,44 @@ body{
     background-color: rgba(255, 217, 0, 0.935);
 }
 
+#audio_waiting_hint{
+    height: 40px;
+    width: 100%;
+    margin-bottom: 2%;
+    animation: waiting_audio_breath 1s infinite alternate linear;
+}
+
+@keyframes waiting_audio_breath{
+    from {background-color: rgba(100, 100, 100, 0.4);}
+    to {background-color: rgba(100, 100, 100, 0.8);}
+}
+
+#download_file_zone{
+    width: 95%;
+    height: 20%;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2%;
+    margin: 1%;
+    margin-left: 0;
+    margin-right: 0;
+    align-items: center;
+    justify-content: space-around;
+    display: flex;
+}
+
 .download_button{
     background-color: transparent;
+    width: max-content;
+    height: 40px;
     border: solid rgba(255, 255, 255, 0.75) 2px;
     border-radius: 10px;
-    transition: 0.2s;
-    font-size: auto;
     color: white;
-    transition: 0.05s;
+    transition: 0.1s;
+    margin: 1%;;
 }
 
 .download_button:hover{
+    border-color: rgba(255, 255, 255, 1);
     background-color: rgb(0, 159, 251);
 }
 
@@ -100,9 +149,165 @@ body{
     background-color: rgb(0, 108, 179);
 }
 
-@keyframes progress_breath{
-    from {background-color: rgba(255, 208, 0, 0.3);}
-    to {background-color: rgba(255, 208, 0, 0.85);}
+#chord_list_zone{
+    width: 95%;
+    height: 66%;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2%;
+    margin: 1%;
+    margin-right: 0;
+}
+
+#chord_list_div{
+    height: 85%;
+    width: 97%;
+    overflow-y: scroll;
+    border: 3px double rgba(128, 128, 128);
+    padding: 1%;
+}
+
+#function_buttons_zone{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 95%;
+    height: 20%;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2%;
+    margin: 1%;
+    margin-right: 0;
+}
+
+.function_button{
+    width: 120px;
+    height: 40px;
+    background-color: transparent;
+    border: solid rgba(255, 255, 255, 0.75) 2px;
+    border-radius: 10px;
+    transition: 0.2s;
+    font-size: auto;
+    color: white;
+    margin: 2px;
+    margin: 1%;
+}
+
+#regenerate_harmony:hover{
+    border-color: rgba(255, 255, 255, 1);
+    background-color: rgba(0, 169, 0, 0.7);
+}
+#regenerate_harmony:active{
+    background-color: rgba(0, 169, 0);
+}
+
+#back_last_page_btn:hover{
+    border-color: rgba(255, 255, 255, 1);
+    background-color: rgba(0, 98, 255, 0.7);
+}
+#back_last_page_btn:active{
+    background-color: rgba(0, 98, 255);
+}
+
+#harmonization_arg_inputs_switch:hover{
+    border-color: rgba(255, 255, 255, 1);
+    background-color: rgba(165, 165, 165, 0.7);
+}
+#harmonization_arg_inputs_switch:active{
+    background-color: rgb(165, 165, 165);
+}
+
+#args_panel{
+    background-color: rgba(0, 0, 0, 0.9);
+    position: fixed;
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+    padding: 5%;
+}
+
+#args_container{
+    background-color: rgba(63, 63, 63, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+#harmonization_arg_inputs_form{
+    width: 90%;
+    height: 90%;
+    color: white;
+    display: flex;
+    flex-direction: row;
+}
+
+#close_panel_button{
+    width: 120px;
+    height: 40px;
+    background-color: transparent;
+    border: solid rgba(255, 255, 255, 0.75) 2px;
+    border-radius: 10px;
+    transition: 0.2s;
+    font-size: auto;
+    color: white;
+    transition: 0.1s;
+}
+
+.panel_button{
+    width: 120px;
+    height: 40px;
+    background-color: transparent;
+    border: solid rgba(255, 255, 255, 0.75) 2px;
+    border-radius: 10px;
+    transition: 0.2s;
+    font-size: auto;
+    color: white;
+    margin: 2px;
+}
+
+#close_panel_button:hover{
+    border-color: rgba(255, 255, 255, 1);
+    background-color: rgba(255, 0, 0, 0.7);
+}
+#close_panel_button:active{
+    background-color: rgba(255, 0, 0);
+}
+
+#args_form_reset_button:hover{
+    border-color: rgba(255, 255, 255, 1);
+    background-color: rgba(0, 98, 255, 0.7);
+}
+#args_form_reset_button:active{
+    background-color: rgba(0, 98, 255);
+}
+
+#regenerate_harmony_on_panel:hover{
+    border-color: rgba(255, 255, 255, 1);
+    background-color: rgba(0, 169, 0, 0.7);
+}
+#regenerate_harmony_on_panel:active{
+    background-color: rgba(0, 169, 0);
+}
+
+#regenerate_hint_panel{
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+#regenerate_hint{
+    position: fixed;
+    text-align: center;
+    color: gray;
+    font-size: 5vw;
+    margin: 0;
+    width: 100%;
+    bottom: 50vh;
 }
 
 #github_link, #lang_link{
@@ -113,4 +318,9 @@ body{
 
 p,input,h2{
     color: rgb(180, 180, 180);
+}
+
+h4{
+    color: rgb(180, 180, 180);
+    margin: 0;
 }
