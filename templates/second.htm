@@ -105,111 +105,95 @@
         <div id="args_container">
             <h2 style="margin: 10px;">參數調整</h2>
             <form id="harmonization_arg_inputs_form" onreset="refresh_arg_value_display()">
-                <fieldset id="chord_tendency_zone" style="flex-grow: 1; overflow-y: scroll;">
+                <fieldset id="chord_tendency_zone">
                     <legend>和弦出現傾向</legend>
-                    <label for="arg_chord_trend_maj">大和弦：</label>
+                    <div class="args_label_div"><label for="arg_chord_trend_maj">大和弦：</label></div>
                     <input type="range" id="arg_chord_trend_maj" name="arg_chord_trend_maj"
                         oninput="display_value_of_range('arg_chord_trend_maj')" min="0" max="2" step="0.01" value="1.5">
-                    <label for="arg_chord_trend_maj" id="arg_chord_trend_maj_val">1.5</label>
-                    <br>
-    
-                    <label for="arg_chord_trend_min">小和弦：</label>
+                    <div class="args_label_div"><label for="arg_chord_trend_maj" id="arg_chord_trend_maj_val" class="slide_val_label">1.5</label></div>
+                    
+                    <div class="args_label_div"><label for="arg_chord_trend_min">小和弦：</label></div>
                     <input type="range" id="arg_chord_trend_min" name="arg_chord_trend_min"
                         oninput="display_value_of_range('arg_chord_trend_min')" min="0" max="2" step="0.01" value="1.25">
-                    <label for="arg_chord_trend_min" id="arg_chord_trend_min_val">1.25</label>
-                    <br>
-    
-                    <label for="arg_chord_trend_dom">屬七和弦：</label>
+                    <div class="args_label_div"><label for="arg_chord_trend_min" id="arg_chord_trend_min_val" class="slide_val_label">1.25</label></div>
+                    
+                    <div class="args_label_div"><label for="arg_chord_trend_dom">屬七和弦：</label></div>
                     <input type="range" id="arg_chord_trend_dom" name="arg_chord_trend_dom"
                         oninput="display_value_of_range('arg_chord_trend_dom')" min="0" max="2" step="0.01" value="1">
-                    <label for="arg_chord_trend_dom" id="arg_chord_trend_dom_val">1</label>
-                    <br>
-    
-                    <label for="arg_chord_trend_domsus4">屬七sus4和弦：</label>
+                    <div class="args_label_div"><label for="arg_chord_trend_dom" id="arg_chord_trend_dom_val" class="slide_val_label">1</label></div>
+                    
+                    <div class="args_label_div"><label for="arg_chord_trend_domsus4">屬七sus4和弦：</label></div>
                     <input type="range" id="arg_chord_trend_domsus4" name="arg_chord_trend_domsus4"
                         oninput="display_value_of_range('arg_chord_trend_domsus4')" min="0" max="2" step="0.01" value="1">
-                    <label for="arg_chord_trend_domsus4" id="arg_chord_trend_domsus4_val">1</label>
-                    <br>
-    
-                    <label for="arg_chord_trend_dim">減七和弦：</label>
+                    <div class="args_label_div"><label for="arg_chord_trend_domsus4" id="arg_chord_trend_domsus4_val" class="slide_val_label">1</label></div>
+                    
+                    <div class="args_label_div"><label for="arg_chord_trend_dim">減七和弦：</label></div>
                     <input type="range" id="arg_chord_trend_dim" name="arg_chord_trend_dim"
                         oninput="display_value_of_range('arg_chord_trend_dim')" min="0" max="2" step="0.01" value="0.75">
-                    <label for="arg_chord_trend_dim" id="arg_chord_trend_dim_val">0.75</label>
-                    <br>
-    
-                    <label for="arg_chord_trend_hdim">半減七和弦：</label>
+                    <div class="args_label_div"><label for="arg_chord_trend_dim" id="arg_chord_trend_dim_val" class="slide_val_label">0.75</label></div>
+                    
+                    <div class="args_label_div"><label for="arg_chord_trend_hdim">半減七和弦：</label></div>
                     <input type="range" id="arg_chord_trend_hdim" name="arg_chord_trend_hdim"
                         oninput="display_value_of_range('arg_chord_trend_hdim')" min="0" max="2" step="0.01" value="0.75">
-                    <label for="arg_chord_trend_hdim" id="arg_chord_trend_hdim_val">0.75</label>
-                    <br>
-    
-                    <label for="arg_chord_trend_mM">小大七和弦：</label>
+                    <div class="args_label_div"><label for="arg_chord_trend_hdim" id="arg_chord_trend_hdim_val" class="slide_val_label">0.75</label></div>
+                    
+                    <div class="args_label_div"><label for="arg_chord_trend_mM">小大七和弦：</label></div>
                     <input type="range" id="arg_chord_trend_mM" name="arg_chord_trend_mM"
                         oninput="display_value_of_range('arg_chord_trend_mM')" min="0" max="2" step="0.01" value="0.75">
-                    <label for="arg_chord_trend_mM" id="arg_chord_trend_mM_val">0.75</label>
-                    <br>
-    
-                    <label for="arg_chord_trend_aug+7">增和弦+7：</label>
+                    <div class="args_label_div"><label for="arg_chord_trend_mM" id="arg_chord_trend_mM_val" class="slide_val_label">0.75</label></div>
+                    
+                    <div class="args_label_div"><label for="arg_chord_trend_aug+7">增和弦+7：</label></div>
                     <input type="range" id="arg_chord_trend_aug+7" name="arg_chord_trend_aug+7"
                         oninput="display_value_of_range('arg_chord_trend_aug+7')" min="0" max="2" step="0.01" value="0.75">
-                    <label for="arg_chord_trend_aug+7" id="arg_chord_trend_aug+7_val">0.75</label>
-                    <br>
-    
-                    <label for="arg_chord_trend_aug7">增七和弦：</label>
+                    <div class="args_label_div"><label for="arg_chord_trend_aug+7" id="arg_chord_trend_aug+7_val" class="slide_val_label">0.75</label></div>
+                    
+                    <div class="args_label_div"><label for="arg_chord_trend_aug7">增七和弦：</label></div>
                     <input type="range" id="arg_chord_trend_aug7" name="arg_chord_trend_aug7"
                         oninput="display_value_of_range('arg_chord_trend_aug7')" min="0" max="2" step="0.01" value="0.75">
-                    <label for="arg_chord_trend_aug7" id="arg_chord_trend_aug7_val">0.75</label>
+                    <div class="args_label_div"><label for="arg_chord_trend_aug7" id="arg_chord_trend_aug7_val" class="slide_val_label">0.75</label></div>
                 </fieldset>
     
-                <fieldset id="other_args_zone" style="flex-grow: 1; overflow-y: scroll;">
+                <fieldset id="other_args_zone">
                     <legend>其他參數</legend>
-                    <label for="arg_octave">八度：</label>
+                    <div class="args_label_div"><label for="arg_octave">音域：</label></div>
                     <input type="range" id="arg_octave" name="arg_octave"
                         oninput="display_value_of_range('arg_octave')" min="1" max="7" step="1" value="4">
-                    <label for="arg_octave" id="arg_octave_val">4</label>
-                    <br>
+                    <div class="args_label_div"><label for="arg_octave" id="arg_octave_val" class="slide_val_label">4</label></div>
         
-                    <label for="arg_selection_range">隨機程度：</label>
+                    <div class="args_label_div"><label for="arg_selection_range">隨機程度：</label></div>
                     <input type="range" id="arg_selection_range" name="arg_selection_range"
                         oninput="display_value_of_range('arg_selection_range')" min="1" max="20" step="1" value="5">
-                    <label for="arg_selection_range" id="arg_selection_range_val">5</label>
-                    <br>
+                    <div class="args_label_div"><label for="arg_selection_range" id="arg_selection_range_val" class="slide_val_label">5</label></div>
         
-                    <label for="arg_antidirection">外聲部反向的傾向：</label>
+                    <div class="args_label_div"><label for="arg_antidirection">外聲部反向的傾向：</label></div>
                     <input type="range" id="arg_antidirection" name="arg_antidirection"
                         oninput="display_value_of_range('arg_antidirection')" min="0" max="5" step="0.1" value="2">
-                    <label for="arg_antidirection" id="arg_antidirection_val">2</label>
-                    <br>
+                    <div class="args_label_div"><label for="arg_antidirection" id="arg_antidirection_val" class="slide_val_label">2</label></div>
         
-                    <label for="arg_fifth_circle">五度連接的傾向：</label>
+                    <div class="args_label_div"><label for="arg_fifth_circle">五度連接的傾向：</label></div>
                     <input type="range" id="arg_fifth_circle" name="arg_fifth_circle"
                         oninput="display_value_of_range('arg_fifth_circle')" min="0" max="4" step="1" value="2">
-                    <label for="arg_fifth_circle" id="arg_fifth_circle_val">2</label>
-                    <br>
+                    <div class="args_label_div"><label for="arg_fifth_circle" id="arg_fifth_circle_val" class="slide_val_label">2</label></div>
         
-                    <label for="arg_voicing_openclose">voicing的開閉穩定程度：</label>
+                    <div class="args_label_div"><label for="arg_voicing_openclose">voicing的開閉穩定程度：</label></div>
                     <input type="range" id="arg_voicing_openclose" name="arg_voicing_openclose"
                         oninput="display_value_of_range('arg_voicing_openclose')" min="0" max="4" step="1" value="2">
-                    <label for="arg_voicing_openclose" id="arg_voicing_openclose_val">2</label>
-                    <br>
+                    <div class="args_label_div"><label for="arg_voicing_openclose" id="arg_voicing_openclose_val" class="slide_val_label">2</label></div>
         
-                    <label for="arg_split_time">空白多久換和弦：</label>
+                    <div class="args_label_div"><label for="arg_split_time">空白多久換和弦：</label></div>
                     <input type="range" id="arg_split_time" name="arg_split_time"
                         oninput="display_value_of_range('arg_split_time', 's')" min="0" max="1" step="0.01" value="0.2">
-                    <label for="arg_split_time" id="arg_split_time_val">0.2s</label>
-                    <br>
+                    <div class="args_label_div"><label for="arg_split_time" id="arg_split_time_val" class="slide_val_label">0.2s</label></div>
         
-                    <label for="arg_sustain_time">持續多久換和弦：</label>
+                    <div class="args_label_div"><label for="arg_sustain_time">持續多久換和弦：</label></div>
                     <input type="range" id="arg_sustain_time" name="arg_sustain_time"
                         oninput="display_value_of_range('arg_sustain_time', 's')" min="0" max="10" step="0.01" value="2.4">
-                    <label for="arg_sustain_time" id="arg_sustain_time_val">2.4s</label>
-                    <br>
+                    <div class="args_label_div"><label for="arg_sustain_time" id="arg_sustain_time_val" class="slide_val_label">2.4s</label></div>
         
-                    <label for="arg_midi_velocity">和聲部分的midi note velocity：</label>
+                    <div class="args_label_div"><label for="arg_midi_velocity">和聲部分的midi note velocity：</label></div>
                     <input type="range" id="arg_midi_velocity" name="arg_midi_velocity"
                         oninput="display_value_of_range('arg_midi_velocity')" min="1" max="127" step="1" value="100">
-                    <label for="arg_midi_velocity" id="arg_midi_velocity_val">100</label>
-                    <br>
+                    <div class="args_label_div"><label for="arg_midi_velocity" id="arg_midi_velocity_val" class="slide_val_label">100</label></div>
                 </fieldset>
             </form>
             <div id="panel_button_zone" style="padding: 2.5%; width: 95%; display: flex; justify-content: center;">

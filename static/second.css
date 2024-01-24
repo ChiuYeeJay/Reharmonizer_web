@@ -243,6 +243,29 @@ body{
     flex-direction: row;
 }
 
+#chord_tendency_zone{
+    width: 50%;
+    overflow-y: scroll;
+    display: grid;
+    grid-template-columns: 40% 40% 15%;
+}
+
+#other_args_zone{
+    width: 50%;
+    overflow-y: scroll;
+    display: grid;
+    grid-template-columns: 50% 40% 10%;
+}
+
+.slide_val_label{
+    margin-left: 10px;
+}
+
+.args_label_div{
+    display: flex;
+    align-items: center;
+}
+
 #close_panel_button{
     width: 120px;
     height: 40px;
